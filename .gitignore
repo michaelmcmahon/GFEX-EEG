@@ -1,0 +1,29 @@
+# GFEX-EEG - Git Ignore
+
+# Exclude developmental and internal audit folders
+old/
+reports/
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+dist/
+build/
+*.egg-info/
+
+# MATLAB specific
+*.asv
+*.mex*
+*.slxc
+*.p
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# Large data files - ensure shared substrate is kept
+# data/ICBM152_scalp.mat is REQUIRED for distribution
+# Add any temporary data patterns here if needed
+temp_data/
+*.log

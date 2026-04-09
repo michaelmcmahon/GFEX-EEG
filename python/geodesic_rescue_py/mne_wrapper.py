@@ -1,0 +1,103 @@
+# /*******************************************************************************
+# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
+# * Version: 1.0.0
+# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
+# * License:  MIT License
+# * Authors: Michael McMahon / University of Galway
+# * DOI: [If available]
+# * Date: 2026
+# *
+# * [License Text or link to License file]
+# *******************************************************************************/
+
+import mne
+import numpy as np
+from .core import GeodesicRescue
+
+def apply_geodesic_rescue(raw, rho=0.0054, beta=1.1885, verbose=True):
+    """
+    Appends predicted LHJ/RHJ (LPA/RPA) coordinates to mne.io.Raw.
+    Coordinates are assumed to be in meters (MNE standard).
+    """
+    if not isinstance(raw, mne.io.BaseRaw):
+        raise ValueError("Input must be an MNE Raw object.")
+    
+    # 1. Identify Anchors
+    def find_anchor(names):
+        for d in raw.info['dig']:
+            # Check ch_names or labels
+            # In MNE, fiducials are usually FIFFV_POINT_LPA, etc.
+            # But here we look for EEG channels as anchors
+            pass
+        
+        # Look in channel names
+        ch_names = raw.ch_names
+        for name in names:
+            for ch in ch_names:
+                # Remove common prefixes
+                clean_ch = ch.upper().replace('EEG', '').replace('E', '')
+                if clean_ch == name.upper() or ch.upper() == name.upper():
+                    idx = ch_names.index(ch)
+                    # Get position from info['chs']
+                    pos = raw.info['chs'][idx]['loc'][:3]
+                    if np.all(pos == 0):
+                        continue
+                    return pos
+        return None
+
+    Cz_m = find_anchor(['Cz', '80', '18', '36'])
+    T7_m = find_anchor(['T7', 'T3', '45', '13', '44', '46'])
+    T8_m = find_anchor(['T8', 'T4', '108', '14', '77', '102'])
+
+    if Cz_m is None or T7_m is None or T8_m is None:
+        raise RuntimeError("Could not find Cz, T7, and T8 anchors in the Raw object.")
+
+    if verbose:
+        print(f"Anchors found: Cz={Cz_m}, T7={T7_m}, T8={T8_m}")
+
+    # 2. Execute Rescue
+    rescuer = GeodesicRescue()
+    pLHJ, pRHJ = rescuer.rescue(Cz_m, T7_m, T8_m, rho=rho, beta=beta)
+
+    if verbose:
+        print(f"Predicted LHJ (LPA): {pLHJ}")
+        print(f"Predicted RHJ (RPA): {pRHJ}")
+
+    # 3. Append to info['dig']
+    # MNE Fiducial IDs:
+    # FIFFV_POINT_CARDINAL = 1
+    # Cardinal IDs: LPA=1, NASION=2, RPA=3
+    
+    def update_fiducial(ident, pos, name):
+        found = False
+        for i, d in enumerate(raw.info['dig']):
+            if d['kind'] == 1 and d['ident'] == ident:
+                raw.info['dig'][i]['r'] = pos.astype(np.float32)
+                found = True
+                if verbose: print(f"Updated existing {name} in dig structure.")
+                break
+        if not found:
+            new_dig = {
+                'kind': 1,
+                'ident': ident,
+                'r': pos.astype(np.float32),
+                'coord_frame': 4 # FIFFV_COORD_HEAD
+            }
+            raw.info.set_montage(mne.channels.make_dig_montage(
+                lpa=pLHJ if ident==1 else None,
+                rpa=pRHJ if ident==3 else None,
+                coord_frame='head'
+            ), on_missing='ignore')
+            # Actually, manually appending is safer if we want to preserve existing dig
+            raw.info['dig'].append({
+                'kind': 1,
+                'ident': ident,
+                'r': pos.astype(np.float32),
+                'coord_frame': 4
+            })
+            if verbose: print(f"Appended new {name} to dig structure.")
+
+    update_fiducial(1, pLHJ, 'LPA')
+    update_fiducial(3, pRHJ, 'RPA')
+
+    return raw
