@@ -1,15 +1,3 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# * DOI: [If available]
-# * Date: 2026
-# *
-# * [License Text or link to License file]
-# *******************************************************************************/
-
 # GFEX-EEG Toolbox (V1.0.0)
 
 **A Hardware-Agnostic Spatial Extrapolation Engine for EEG Fiducials**
@@ -26,21 +14,10 @@ GFEX-EEG/
 │   └── ICBM152_scalp.mat          <- Shared Euclidean manifold substrate
 ├── matlab/
 │   ├── core/                      <- Shared Physics Engine
-│   │   ├── geodesic_rescue.m
-│   │   └── predict_helix_tragus_junctions_fno.m
-│   ├── blackbox/                  <- Standard "Black-Box" Wrappers
-│   │   ├── brainstorm/
-│   │   ├── eeglab/
-│   │   └── fieldtrip/
-│   └── tuning/                    <- Advanced Metaheuristic Mode
-│       ├── geodesic_fno_tuner.m
-│       └── verify_geodesic_tuner.m
+│   ├── blackbox/                  <- Standard "Black-Box" Wrappers (EEGLAB, FieldTrip, Brainstorm)
+│   └── tuning/                    <- Advanced Metaheuristic Mode (FNO Tuner)
 ├── python/                        <- Python Native Library (geodesic-rescue-py)
-│   ├── geodesic_rescue_py/
-│   │   ├── core.py                <- Shared physics (Scipy/Numpy)
-│   │   ├── mne_wrapper.py         <- MNE-Python "Black-Box"
-│   │   └── tuner.py               <- GeodesicTuner Class
-│   └── setup.py
+│   └── geodesic_rescue_py/        <- MNE-Python Wrapper & Tuner
 ├── reproducibility/               <- Experimental Code Pipeline (Paper Validation)
 └── README.md
 ```
@@ -77,26 +54,22 @@ raw_rescued = apply_geodesic_rescue(raw)
 
 ## Tier 2: Metaheuristic Tuning Mode (For Advanced Users)
 
-While the pre-trained weights cover the vast majority of adult human heads, researchers working with highly specialized hardware (e.g., neonatal caps) or pediatric cohorts with vastly different cranial proportions will need to recalculate the optimal parameters.
-
-If you possess a small "training subset" (e.g., 5 to 10 subjects) where you actually have structural MRIs and have manually tagged the true LHJ/RHJ, you can use the dual-phase Far and Near Optimization (FNO) engine to derive bespoke bounds.
+Researchers working with highly specialized hardware (e.g., neonatal caps) or pediatric cohorts will need to recalculate the optimal parameters. Using a small "training subset" (e.g., 5 subjects) with known MRIs, the FNO engine can derive bespoke bounds.
 
 ### MATLAB Tuner
 ```matlab
-% training_data requires: .Cz, .T7, .T8, .gtLPA, .gtRPA (in Meters)
 [optimal_rho, optimal_beta, info] = geodesic_fno_tuner(training_data);
 ```
 
 ### Python Tuner
 ```python
 from geodesic_rescue_py import GeodesicTuner
-
 tuner = GeodesicTuner(training_data)
 results = tuner.tune()
-print(f"Optimal Rho: {results['optimal_rho']}")
 ```
 
-Once derived, you can pass these optimal parameters into the Black-Box wrappers to rescue the remaining 90% of your dataset that lacks MRIs.
-
 ---
-*Authors: Michael McMahon / University of Galway*
+**Authors:** Michael McMahon / University of Galway  
+**Repository:** [https://github.com/michaelmcmahon/GFEX-EEG](https://github.com/michaelmcmahon/GFEX-EEG)  
+**License:** MIT License  
+**Date:** 2026
