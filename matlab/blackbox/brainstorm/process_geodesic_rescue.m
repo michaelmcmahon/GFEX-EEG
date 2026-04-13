@@ -28,10 +28,10 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.nMinFiles   = 1;
     sProcess.options.rho.Comment = 'Optimal Ratio (Rho):';
     sProcess.options.rho.Type    = 'value';
-    sProcess.options.rho.Value   = 0.0054;
+    sProcess.options.rho.Value   = 0.000000;
     sProcess.options.beta.Comment = 'Scaling Limit (Beta):';
     sProcess.options.beta.Type    = 'value';
-    sProcess.options.beta.Value   = 1.1885;
+    sProcess.options.beta.Value   = 1.983084;
 end
 
 function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>

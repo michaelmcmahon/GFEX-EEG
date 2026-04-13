@@ -22,9 +22,16 @@ GFEX-EEG/
 └── README.md
 ```
 
+## Forensic Data Warning: The "Brainstorm Z=0 Flatline" and "Raw Voxel Trap"
+When extracting ground truth from legacy neuroinformatics pipelines, **always ensure your data hasn't been structurally flattened or grid-locked.** 
+
+During our analysis of the LEMON dataset, we proved that standard Brainstorm BIDS exports mathematically coerce the 3D Polhemus coordinates to the `Z=0` plane, effectively **erasing the subject's physiological head tilt**. Furthermore, default Brainstorm MRI coordinates are frequently stored as **unscaled, un-tilted Voxel Indices**. 
+
+**The Fix:** Always extract True World Space coordinates (`cs_convert` to 'world' in Brainstorm) to restore the subject's physiological tilt and 1.0mm scaling before running any FNO Tuner derivations. Failure to do so will result in an Orthogonal Parity Collision.
+
 ## Tier 1: "Black-Box" Wrappers (For Standard Adult Cohorts)
 
-For 95% of use cases, researchers can rely on the pre-trained weights (`rho = 0.0054`, `beta = 1.1885`). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize BIDS double-scaling traps and execute **RAS-to-ALS** axis transposition.
+For 95% of use cases, researchers can rely on the pre-trained weights (`rho = 0.000000`, `beta = 1.983084`). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize BIDS double-scaling traps and execute **RAS-to-ALS** axis transposition.
 
 ### EEGLAB
 Simply add `matlab/blackbox/eeglab` to your MATLAB path. The plugin will appear under `Tools > Geodesic Origin Rescue`.

@@ -14,10 +14,11 @@ import mne
 import numpy as np
 from .core import GeodesicRescue
 
-def apply_geodesic_rescue(raw, rho=0.0054, beta=1.1885, verbose=True):
+def apply_geodesic_rescue(raw, rho=0.000000, beta=1.983084, parity='RAS', verbose=True):
     """
     Appends predicted LHJ/RHJ (LPA/RPA) coordinates to mne.io.Raw.
     Coordinates are assumed to be in meters (MNE standard).
+    If parity is 'ALS' or 'BIDS-Brainstorm', automatically swaps [-Y, X, Z] to restore RAS.
     """
     if not isinstance(raw, mne.io.BaseRaw):
         raise ValueError("Input must be an MNE Raw object.")
@@ -51,6 +52,11 @@ def apply_geodesic_rescue(raw, rho=0.0054, beta=1.1885, verbose=True):
 
     if Cz_m is None or T7_m is None or T8_m is None:
         raise RuntimeError("Could not find Cz, T7, and T8 anchors in the Raw object.")
+
+    if parity.upper() in ['ALS', 'BIDS-BRAINSTORM']:
+        Cz_m = np.array([-Cz_m[1], Cz_m[0], Cz_m[2]])
+        T7_m = np.array([-T7_m[1], T7_m[0], T7_m[2]])
+        T8_m = np.array([-T8_m[1], T8_m[0], T8_m[2]])
 
     if verbose:
         print(f"Anchors found: Cz={Cz_m}, T7={T7_m}, T8={T8_m}")

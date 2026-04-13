@@ -26,11 +26,19 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     end
     
     % Optional Params
-    rho = 0.0054; beta = 1.1885; mesh_path = '';
+    rho = 0.000000; beta = 1.983084; mesh_path = ''; parity = 'RAS';
     for i = offset:2:nargin
         if strcmpi(varargin{i}, 'rho'),   rho = varargin{i+1}; end
         if strcmpi(varargin{i}, 'beta'),  beta = varargin{i+1}; end
         if strcmpi(varargin{i}, 'mesh'),  mesh_path = varargin{i+1}; end
+        if strcmpi(varargin{i}, 'parity'), parity = varargin{i+1}; end
+    end
+    
+    if strcmpi(parity, 'ALS') || strcmpi(parity, 'BIDS-Brainstorm')
+        % Apply [-Y, X, Z] swap to restore native RAS
+        Cz_m = [-Cz_m(2), Cz_m(1), Cz_m(3)];
+        T7_m = [-T7_m(2), T7_m(1), T7_m(3)];
+        T8_m = [-T8_m(2), T8_m(1), T8_m(3)];
     end
     
     if isempty(mesh_path)

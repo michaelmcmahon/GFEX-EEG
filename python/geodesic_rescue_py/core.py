@@ -132,7 +132,7 @@ class GeodesicRescue:
         self.vertices = data['Vertices']
         self.faces = data['Faces'] - 1 # 0-indexed
         
-    def rescue(self, Cz_m, T7_m, T8_m, rho=0.0054, beta=1.1885):
+    def rescue(self, Cz_m, T7_m, T8_m, rho=0.000000, beta=1.983084):
         """
         Main rescue function. Expects coordinates in meters.
         Returns predicted LHJ, RHJ in meters.

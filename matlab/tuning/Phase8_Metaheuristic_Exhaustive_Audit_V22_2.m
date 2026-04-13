@@ -55,7 +55,7 @@ function Phase8_Metaheuristic_Exhaustive_Audit_V22_2()
         % 1. MATLAB Tuning
         [opt_rho_m, opt_beta_m, info_m] = geodesic_fno_tuner(train_data, 'max_iter_far', 10, 'max_iter_near', 20);
         test_res_m = calculate_err(test_data, opt_rho_m, opt_beta_m);
-        base_res_m = calculate_err(test_data, 0.0054, 1.1885);
+        base_res_m = calculate_err(test_data, 0.000000, 1.983084);
         imp_m = ((base_res_m - test_res_m) / base_res_m) * 100;
         
         fprintf(fid, '%s,Standalone MATLAB,%.6f,%.6f,%.2f,%.2f,%.2f%%,Converged\n', ...

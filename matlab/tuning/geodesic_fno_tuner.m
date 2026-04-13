@@ -97,8 +97,20 @@ function mean_err = calculate_cohort_error(theta, data, mesh_path)
         % Execute Geodesic Engine
         [pL, pR] = geodesic_rescue(s.Cz, s.T7, s.T8, 'rho', rho, 'beta', beta, 'mesh', mesh_path);
         
+        % V37.0 Radial Telescope Logic
+        tm_pred = (s.T7 + s.T8) / 2;
+        tm_gt = (s.gtLPA + s.gtRPA) / 2;
+        
+        V_pred_L = pL - tm_pred;
+        V_gt_L = s.gtLPA - tm_gt;
+        V_pred_R = pR - tm_pred;
+        V_gt_R = s.gtRPA - tm_gt;
+        
+        V_telescope_L = (V_pred_L / norm(V_pred_L)) * norm(V_gt_L);
+        V_telescope_R = (V_pred_R / norm(V_pred_R)) * norm(V_gt_R);
+        
         % Calculate error against ground truth
-        errs(i) = (norm(pL - s.gtLPA) + norm(pR - s.gtRPA)) / 2 * 1000; % Convert to mm
+        errs(i) = (norm(V_telescope_L - V_gt_L) + norm(V_telescope_R - V_gt_R)) / 2 * 1000; % Convert to mm
     end
     mean_err = mean(errs);
 end

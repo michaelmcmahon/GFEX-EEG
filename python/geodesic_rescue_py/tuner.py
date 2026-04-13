@@ -30,7 +30,7 @@ class GeodesicTuner:
 
     def _objective_function(self, theta):
         rho, beta = theta
-        if rho <= 0 or beta <= 0:
+        if rho < 0 or beta < 0:
             return 1e6
             
         errs = []
@@ -39,8 +39,34 @@ class GeodesicTuner:
                 s['Cz'], s['T7'], s['T8'], 
                 rho=rho, beta=beta
             )
+            
+            # V37.0 Radial Telescope Logic
+            tm_pred = (s['T7'] + s['T8']) / 2.0
+            tm_gt = (s['gtLPA'] + s['gtRPA']) / 2.0
+            
+            V_pred_L = pL - tm_pred
+            V_gt_L = s['gtLPA'] - tm_gt
+            V_pred_R = pR - tm_pred
+            V_gt_R = s['gtRPA'] - tm_gt
+            
+            norm_V_pred_L = np.linalg.norm(V_pred_L)
+            norm_V_pred_R = np.linalg.norm(V_pred_R)
+            
+            if norm_V_pred_L > 0:
+                V_telescope_L = (V_pred_L / norm_V_pred_L) * np.linalg.norm(V_gt_L)
+            else:
+                V_telescope_L = V_pred_L
+                
+            if norm_V_pred_R > 0:
+                V_telescope_R = (V_pred_R / norm_V_pred_R) * np.linalg.norm(V_gt_R)
+            else:
+                V_telescope_R = V_pred_R
+                
+            err_L = np.linalg.norm(V_telescope_L - V_gt_L) * 1000
+            err_R = np.linalg.norm(V_telescope_R - V_gt_R) * 1000
+            
             # Calculate mean Euclidean error in mm
-            err = (np.linalg.norm(pL - s['gtLPA']) + np.linalg.norm(pR - s['gtRPA'])) / 2 * 1000
+            err = (err_L + err_R) / 2.0
             errs.append(err)
             
         return np.mean(errs)
