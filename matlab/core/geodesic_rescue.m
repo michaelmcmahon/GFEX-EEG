@@ -76,7 +76,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     
     P_temp = [V_temp(iCz,:); V_temp(iT7,:); V_temp(iT8,:)];
     P_subj = [Cz_m; T7_m; T8_m];
-    
+
     [~, ~, tr] = procrustes(P_subj, P_temp, 'scaling', true, 'reflection', false);
     
     t_pivot = (T_T7 + T_T8) / 2;
