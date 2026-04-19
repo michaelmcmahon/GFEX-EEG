@@ -20,6 +20,7 @@ function PhaseV_Step5_Final_Global_Validation_V21_Rescue()
     root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
     scripts_dir = fileparts(mfilename('fullpath'));
     addpath(scripts_dir);
+    addpath(fullfile(scripts_dir, '..', 'matlab', 'core'));
     addpath(genpath('C:\MoBI_Research\brainstorm3\toolbox'));
     % ALL COHORTS
     cohorts = {'ds007353', 'ds005811-ds005810', 'ds004718', 'ds005795', 'ds007216', 'ds006525', 'ds000117-ds002718'}; 
@@ -76,7 +77,7 @@ function [mean_val, sd_val, improvement, n_subs, metric_name] = execute_engine_v
     T_Fpz = [-0.000981, 0.085493,  0.019454];
     
     scripts_dir = fileparts(mfilename('fullpath'));
-    mesh_path = fullfile(scripts_dir, 'ICBM152_scalp.mat');
+    mesh_path = fullfile(scripts_dir, '..', 'data', 'ICBM152_scalp.mat');
     mesh = load(mesh_path, 'Vertices'); V_temp = mesh.Vertices;
     t_pivot = (T_T7 + T_T8) / 2;
     [~, iCz] = min(sum(bsxfun(@minus, V_temp, T_Cz(:)').^2, 2));

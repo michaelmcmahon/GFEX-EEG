@@ -8,7 +8,7 @@ addpath('C:\MoBI_Research\GFEX-EEG\matlab\core');
 addpath('C:\MoBI_Research\GFEX-EEG\reproducibility');
 addpath('C:\MoBI_Research\brainstorm3');
 addpath(genpath('C:\MoBI_Research\brainstorm3\toolbox'));
-mesh_path = 'C:\MoBI_Research\GFEX-EEG\data\ICBM152_scalp.mat';
+mesh_path = fullfile(fileparts(mfilename('fullpath')), '..', 'data', 'ICBM152_scalp.mat');
 
 % LOCKED LEMON-10 WEIGHTS (V40.0)
 rho_final = 0.000000;
@@ -53,10 +53,9 @@ for c = 1:length(cohorts)
                 % LEMON SCS-to-SCS Bridge (Already in ALS Space)
                 sSubject = bst_get('Subject', sub_id);
                 mriFile = fullfile(dbDir, 'ds000221_LEMON', 'anat', sSubject.Anatomy(1).FileName);
-                MRI = load(mriFile, 'SCS');
-                R_scs = MRI.SCS.R; T_scs = MRI.SCS.T;
-                trueL = (R_scs * MRI.SCS.LPA(:) + T_scs)' / 1000;
-                trueR = (R_scs * MRI.SCS.RPA(:) + T_scs)' / 1000;
+                MRI = load(mriFile, 'SCS', 'Voxsize');
+                trueL = cs_convert(MRI, 'voxel', 'scs', reshape(MRI.SCS.LPA, 1, 3)) / 1000;
+                trueR = cs_convert(MRI, 'voxel', 'scs', reshape(MRI.SCS.RPA, 1, 3)) / 1000;
                 matPath = fullfile(raw_lemon_dir, sub_id, 'eeg', [sub_id '_localizer.mat']);
                 loc = load(matPath);
                 iCz_s = find(contains({loc.Channel.Name}, '_Cz'), 1);

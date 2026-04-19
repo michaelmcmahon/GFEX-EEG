@@ -70,10 +70,9 @@ function Phase7_Global_Empirical_Audit_V23()
             if strcmpi(dataset_id, 'ds000221_LEMON')
                 sSubject = bst_get('Subject', sub_id);
                 mriFile = fullfile(dbDir, 'ds000221_LEMON', 'anat', sSubject.Anatomy(1).FileName);
-                MRI = load(mriFile, 'SCS');
-                R_scs = MRI.SCS.R; T_scs = MRI.SCS.T;
-                trueL_scs = (R_scs * MRI.SCS.LPA(:) + T_scs)' / 1000;
-                trueR_scs = (R_scs * MRI.SCS.RPA(:) + T_scs)' / 1000;
+                MRI = load(mriFile, 'SCS', 'Voxsize');
+                trueL_scs = cs_convert(MRI, 'voxel', 'scs', reshape(MRI.SCS.LPA, 1, 3)) / 1000;
+                trueR_scs = cs_convert(MRI, 'voxel', 'scs', reshape(MRI.SCS.RPA, 1, 3)) / 1000;
                 
                 % SCS Bridge puts GT in ALS space. The V23 wrapper outputs in RAS.
                 % We must apply the parity swap to the GT to match the wrapper's RAS output.

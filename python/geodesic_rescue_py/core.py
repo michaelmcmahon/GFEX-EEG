@@ -18,39 +18,43 @@ import os
 
 def procrustes_analysis(P_subj, P_temp):
     """
-    Standard Procrustes analysis with scaling (Umeyama algorithm).
-    Maps P_temp to P_subj.
+    MATLAB-exact procrustes: matches procrustes(P_subj, P_temp, 'scaling', true, 'reflection', false).
+    Returns (b, T, c) such that P_subj ~= b * P_temp @ T + c. Apply as b * Y @ T + c (NOT @ T.T).
     """
-    mu_subj = P_subj.mean(0)
-    mu_temp = P_temp.mean(0)
-    
-    P_subj_c = P_subj - mu_subj
-    P_temp_c = P_temp - mu_temp
-    
-    sig_subj = np.sum(P_subj_c**2) / P_subj.shape[0]
-    sig_temp = np.sum(P_temp_c**2) / P_temp.shape[0]
-    
-    # SVD
-    C = (P_subj_c.T @ P_temp_c) / P_subj.shape[0]
-    U, S, Vt = np.linalg.svd(C)
-    
-    # Rotation
-    R = U @ Vt
-    if np.linalg.det(R) < 0:
-        # Reflection fix
-        S_fix = np.eye(U.shape[1])
-        S_fix[-1, -1] = -1
-        R = U @ S_fix @ Vt
-        
-    # Scale
-    b = np.sum(S) / sig_temp if sig_temp > 0 else 1.0
-    
-    # Translation
-    c = mu_subj - b * (mu_temp @ R.T)
-    
-    return b, R, c
+    X = P_subj
+    Y = P_temp
 
-def predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, vertices, faces, rho, beta, D_L_sub, D_R_sub, D_standard=0.140):
+    muX = X.mean(0)
+    muY = Y.mean(0)
+    X0 = X - muX
+    Y0 = Y - muY
+
+    normX = np.sqrt(np.sum(X0**2))
+    normY = np.sqrt(np.sum(Y0**2))
+
+    X0n = X0 / normX
+    Y0n = Y0 / normY
+
+    A = X0n.T @ Y0n
+    U, S, Vt = np.linalg.svd(A)
+    L = U
+    M = Vt.T
+    D = S.copy()
+
+    T = M @ L.T
+    if np.linalg.det(T) < 0:
+        M = M.copy()
+        M[:, -1] = -M[:, -1]
+        D[-1] = -D[-1]
+        T = M @ L.T
+
+    traceTA = np.sum(D)
+    b = traceTA * normX / normY
+    c = muX - b * (muY @ T)
+
+    return b, T, c
+
+def predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, vertices, faces, rho, beta, D_L_sub, D_R_sub, D_standard=0.1388):
     """
     Python translation of the Geodesic Extrapolation Algorithm.
     """
@@ -122,47 +126,67 @@ def predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, vertices, faces, rho, b
     return LHJ_mni, RHJ_mni, iCz, iT7, iT8
 
 class GeodesicRescue:
-    def __init__(self, mesh_path=None):
+    def __init__(self, mesh_path=None, rho=0.000000, beta=1.983084, parity='RAS', D_standard=0.1388):
+        is_default_mesh = False
         if mesh_path is None:
-            # Default to bundled ICBM152
             base_dir = os.path.dirname(os.path.abspath(__file__))
             mesh_path = os.path.join(base_dir, 'data', 'ICBM152_scalp.mat')
-        
+            is_default_mesh = True
+
         data = scipy.io.loadmat(mesh_path)
         self.vertices = data['Vertices']
+        # ICBM152_scalp.mat is already in RAS (T_T8 X=+0.097 = right = RAS).
+        # Do NOT apply any axis conversion here.
+
         self.faces = data['Faces'] - 1 # 0-indexed
-        
-    def rescue(self, Cz_m, T7_m, T8_m, rho=0.000000, beta=1.983084):
+        self.rho = rho
+        self.beta = beta
+        self.parity = parity
+        self.D_standard = D_standard
+
+    def rescue(self, Cz_m, T7_m, T8_m, rho=None, beta=None, D_standard=None):
         """
         Main rescue function. Expects coordinates in meters.
         Returns predicted LHJ, RHJ in meters.
         """
-        # Template Anchors (Golden Kite in Meters)
+        rho_val = self.rho if rho is None else rho
+        beta_val = self.beta if beta is None else beta
+        D_std_val = self.D_standard if D_standard is None else D_standard
+        
+        # 1. PARITY RESTORE (Input ALS -> RAS)
+        Cz_proc = Cz_m.copy()
+        T7_proc = T7_m.copy()
+        T8_proc = T8_m.copy()
+        
+        if self.parity.upper() in ['ALS', 'BIDS-BRAINSTORM']:
+            Cz_proc = np.array([-Cz_m[1], Cz_m[0], Cz_m[2]])
+            T7_proc = np.array([-T7_m[1], T7_m[0], T7_m[2]])
+            T8_proc = np.array([-T8_m[1], T8_m[0], T8_m[2]])
+
+        # 2. TEMPLATE ANCHORS (Exact MATLAB V22.2 Parity)
         T_Cz = np.array([0.011240, 0.025921, 0.141134])
         T_T7 = np.array([-0.089174, -0.001327, -0.006348])
         T_T8 = np.array([0.096880, -0.014286, -0.005819])
-        
-        D_L_sub = np.linalg.norm(Cz_m - T7_m)
-        D_R_sub = np.linalg.norm(Cz_m - T8_m)
-        
-        # 1. Execute Core Engine (MNI Space Prediction)
+
+        # 3. INDIVIDUALIZED SCALING (Hardware Standoff)
+        D_L_sub = np.linalg.norm(Cz_proc - T7_proc)
+        D_R_sub = np.linalg.norm(Cz_proc - T8_proc)
+
+        # 4. CORE ENGINE (Geodesic Trace in MNI)
         Lp_mni, Rp_mni, iCz, iT7, iT8 = predict_helix_tragus_junctions_fno(
-            T_Cz, T_T7, T_T8, self.vertices, self.faces, rho, beta, D_L_sub, D_R_sub
+            T_Cz, T_T7, T_T8, self.vertices, self.faces, rho_val, beta_val, D_L_sub, D_R_sub, D_std_val
         )
         
-        # 2. Temporal Pivot Mapping (Subject Space)
+        # 5. PIVOT-LOCK PROJECTION (MNI -> Subject RAS)
+        # Matches MATLAB geodesic_rescue.m: tr.b*(Lp_mni-t_pivot)*tr.T + s_pivot
         P_temp = np.vstack([self.vertices[iCz], self.vertices[iT7], self.vertices[iT8]])
-        P_subj = np.vstack([Cz_m, T7_m, T8_m])
-        
-        b, R, c = procrustes_analysis(P_subj, P_temp)
-        
-        # Mapping using pivot-lock logic from MATLAB
+        P_subj = np.vstack([Cz_proc, T7_proc, T8_proc])
+
+        b, T, _ = procrustes_analysis(P_subj, P_temp)
+
         t_pivot = (T_T7 + T_T8) / 2
-        s_pivot = (T7_m + T8_m) / 2
-        
-        # MATLAB: pLHJ = tr.b * (Lp_mni(1,:) - t_pivot) * tr.T + s_pivot;
-        # Python: pLHJ = b * (Lp_mni - t_pivot) @ R.T + s_pivot
-        pLHJ = b * (Lp_mni - t_pivot) @ R.T + s_pivot
-        pRHJ = b * (Rp_mni - t_pivot) @ R.T + s_pivot
+        s_pivot = (T7_proc + T8_proc) / 2
+        pLHJ = b * (Lp_mni - t_pivot) @ T + s_pivot
+        pRHJ = b * (Rp_mni - t_pivot) @ T + s_pivot
         
         return pLHJ, pRHJ

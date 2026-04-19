@@ -34,10 +34,7 @@ function [optimal_rho, optimal_beta, info] = geodesic_fno_tuner(training_data, v
     mesh_path = p.Results.mesh;
     if isempty(mesh_path)
         base_path = fileparts(mfilename('fullpath'));
-        mesh_path = fullfile(base_path, '..', 'core', 'ICBM152_scalp.mat');
-        if ~exist(mesh_path, 'file')
-             mesh_path = fullfile(base_path, '..', '..', 'data', 'ICBM152_scalp.mat');
-        end
+        mesh_path = fullfile(base_path, '..', '..', 'data', 'ICBM152_scalp.mat');
     end
 
     % Objective Function: Mean Euclidean Residual (mm)
