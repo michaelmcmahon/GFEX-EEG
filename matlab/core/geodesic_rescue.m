@@ -26,7 +26,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     end
     
     % Optional Params
-    rho = 0.000000; beta = 1.983084; mesh_path = ''; parity = 'RAS'; D_standard = 0.1388;
+    rho = 0.248383; beta = 0.235926; mesh_path = ''; parity = 'RAS'; D_standard = 0.1388;
     for i = offset:2:nargin
         if strcmpi(varargin{i}, 'rho'),   rho = varargin{i+1}; end
         if strcmpi(varargin{i}, 'beta'),  beta = varargin{i+1}; end

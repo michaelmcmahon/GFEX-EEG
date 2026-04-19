@@ -47,7 +47,7 @@ function PhaseV_Step5_Final_Global_Validation_V21_Rescue()
         load(fullfile(proc_dir, 'Master_Scalp_Proxy.mat'), 'Master_Scalp_Proxy');
         load(fullfile(proc_dir, 'Ground_Truth_MRI.mat'), 'Ground_Truth_MRI');
         
-        theta_fixed = [0.1451, 1.1165]; 
+        theta_fixed = [0.248383, 0.235926]; 
         
         [mean_val, sd_val, improvement, n_subs, metric_name] = execute_engine_v21(theta_fixed, Master_Scalp_Proxy, Ground_Truth_MRI, cohort_id, is_rescue);
         
