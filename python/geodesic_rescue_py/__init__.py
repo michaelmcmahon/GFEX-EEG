@@ -13,5 +13,6 @@
 from .core import GeodesicRescue
 from .mne_wrapper import apply_geodesic_rescue
 from .tuner import GeodesicTuner
+from .weight_zoo import load_cohort_preset
 
 __version__ = "0.1.0"

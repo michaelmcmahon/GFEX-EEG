@@ -26,6 +26,9 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.OutputTypes = {'channel'};
     sProcess.nInputs     = 1;
     sProcess.nMinFiles   = 1;
+    sProcess.options.cohort.Comment = 'Cohort preset (empty = use Rho/Beta below):';
+    sProcess.options.cohort.Type    = 'text';
+    sProcess.options.cohort.Value   = '';
     sProcess.options.rho.Comment = 'Optimal Ratio (Rho):';
     sProcess.options.rho.Type    = 'value';
     sProcess.options.rho.Value   = 0.248383;
@@ -60,9 +63,20 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
 
     Cz_m = Cz_raw * scale_f; T7_m = T7_raw * scale_f; T8_m = T8_raw * scale_f;
 
-    % 3. Execute Geodesic Core Engine (Meter-Space Output)
+    % 3. Resolve weights: cohort preset (if set) > UI rho/beta values
+    cohort_tag = sProcess.options.cohort.Value;
+    rho_val    = sProcess.options.rho.Value;
+    beta_val   = sProcess.options.beta.Value;
+    Dstd_val   = 0.1388;
+    if ~isempty(cohort_tag)
+        preset = load_cohort_preset(cohort_tag);
+        rho_val = preset.rho; beta_val = preset.beta; Dstd_val = preset.D_standard;
+    end
+
+    % 4. Execute Geodesic Core Engine (Meter-Space Output)
     try
-        [pLHJ_m, pRHJ_m, ~] = geodesic_rescue(Cz_m, T7_m, T8_m, 'rho', sProcess.options.rho.Value, 'beta', sProcess.options.beta.Value);
+        [pLHJ_m, pRHJ_m, ~] = geodesic_rescue(Cz_m, T7_m, T8_m, ...
+            'rho', rho_val, 'beta', beta_val, 'D_standard', Dstd_val);
         
         % 4. Brainstorm SCS mapping (Using Subject's structural transform)
         [sSubject, ~] = bst_get('Subject', sInputs.SubjectName);
