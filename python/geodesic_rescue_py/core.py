@@ -163,10 +163,16 @@ class GeodesicRescue:
         self.cohort = cohort
 
     def rescue(self, Cz_m, T7_m, T8_m, rho=None, beta=None, D_standard=None,
-               cohort=None):
+               cohort=None, mlp_correction=False):
         """
         Main rescue function. Expects coordinates in meters.
         Returns predicted LHJ, RHJ in meters.
+
+        mlp_correction : bool, optional
+            If True, apply the cohort's residual-correction MLP after the
+            geodesic prediction. Requires `cohort` to be set and the cohort
+            preset in weight_zoo.json to have a `mlp_weights_file` entry.
+            Default False = pure geodesic output.
         """
         # Per-call cohort override (rare; usually set at __init__ time)
         if cohort is not None:
@@ -215,5 +221,22 @@ class GeodesicRescue:
         s_pivot = (T7_proc + T8_proc) / 2
         pLHJ = b * (Lp_mni - t_pivot) @ T + s_pivot
         pRHJ = b * (Rp_mni - t_pivot) @ T + s_pivot
-        
+
+        # Optional Tier 1.5 MLP residual correction
+        if mlp_correction:
+            if cohort is None:
+                raise ValueError('mlp_correction=True requires a cohort kwarg for weight lookup.')
+            from .weight_zoo import load_cohort_preset
+            from .mlp_correction import apply_mlp_correction
+            preset = load_cohort_preset(cohort)
+            if not preset.get('mlp_weights_file'):
+                raise RuntimeError(
+                    f'Cohort "{cohort}" has no mlp_weights_file registered in weight_zoo.json'
+                )
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            mlp_path = os.path.join(base_dir, 'data', 'mlp', preset['mlp_weights_file'])
+            pLHJ, pRHJ, _ = apply_mlp_correction(
+                Cz_proc, T7_proc, T8_proc, pLHJ, pRHJ, mlp_path
+            )
+
         return pLHJ, pRHJ

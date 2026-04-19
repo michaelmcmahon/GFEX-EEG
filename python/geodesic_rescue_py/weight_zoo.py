@@ -90,4 +90,6 @@ def load_cohort_preset(tag, zoo_path=None):
         'D_standard': entry['D_standard'],
         'status': entry['status'],
         'description': entry.get('description'),
+        'mlp_weights_file': entry.get('mlp_weights_file'),
+        'mlp_holdout_mean_err_mm': entry.get('mlp_holdout_mean_err_mm'),
     }
