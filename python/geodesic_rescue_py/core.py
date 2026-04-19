@@ -162,7 +162,8 @@ class GeodesicRescue:
         self.D_standard = D_standard
         self.cohort = cohort
 
-    def rescue(self, Cz_m, T7_m, T8_m, rho=None, beta=None, D_standard=None, cohort=None):
+    def rescue(self, Cz_m, T7_m, T8_m, rho=None, beta=None, D_standard=None,
+               cohort=None):
         """
         Main rescue function. Expects coordinates in meters.
         Returns predicted LHJ, RHJ in meters.
