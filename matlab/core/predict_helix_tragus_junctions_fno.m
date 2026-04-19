@@ -16,7 +16,7 @@
 % =========================================================================
 function [LHJ_mni, RHJ_mni, iCz, iT7, iT8] = predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, mesh_path, rho, beta, D_L_sub, D_R_sub, D_standard)
 
-    if nargin < 9, D_standard = 0.140; end
+    if nargin < 9, D_standard = 0.1388; end
     mesh = load(mesh_path);
     V = mesh.Vertices; F = mesh.Faces;
     % 1. Build Mesh Graph

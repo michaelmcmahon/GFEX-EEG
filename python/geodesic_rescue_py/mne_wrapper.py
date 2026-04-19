@@ -23,7 +23,14 @@ def apply_geodesic_rescue(raw, rho=0.000000, beta=1.983084, parity='RAS', verbos
     if not isinstance(raw, mne.io.BaseRaw):
         raise ValueError("Input must be an MNE Raw object.")
     
-    # 1. Identify Anchors
+    # 1. Apply global parity swap to ALL digitizer points if ALS
+    if parity.upper() in ['ALS', 'BIDS-BRAINSTORM']:
+        with raw.info._unlock():
+            for d in raw.info['dig']:
+                # ALS to RAS: [-Y, X, Z]
+                d['r'] = np.array([-d['r'][1], d['r'][0], d['r'][2]])
+    
+    # 2. Identify Anchors
     def find_anchor(names):
         for d in raw.info['dig']:
             # Check ch_names or labels

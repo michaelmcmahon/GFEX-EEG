@@ -26,12 +26,13 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     end
     
     % Optional Params
-    rho = 0.000000; beta = 1.983084; mesh_path = ''; parity = 'RAS';
+    rho = 0.000000; beta = 1.983084; mesh_path = ''; parity = 'RAS'; D_standard = 0.1388;
     for i = offset:2:nargin
         if strcmpi(varargin{i}, 'rho'),   rho = varargin{i+1}; end
         if strcmpi(varargin{i}, 'beta'),  beta = varargin{i+1}; end
         if strcmpi(varargin{i}, 'mesh'),  mesh_path = varargin{i+1}; end
         if strcmpi(varargin{i}, 'parity'), parity = varargin{i+1}; end
+        if strcmpi(varargin{i}, 'D_standard'), D_standard = varargin{i+1}; end
     end
     
     if strcmpi(parity, 'ALS') || strcmpi(parity, 'BIDS-Brainstorm')
@@ -56,7 +57,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     D_R_sub = norm(Cz_m - T8_m);
     
     % Call Core Engine (predict_helix_tragus_junctions_fno)
-    [Lp_mni, Rp_mni, iCz, iT7, iT8] = predict_helix_tragus_junctions_fno(T_Cz, T_T7, T_T8, mesh_path, rho, beta, D_L_sub, D_R_sub);
+    [Lp_mni, Rp_mni, iCz, iT7, iT8] = predict_helix_tragus_junctions_fno(T_Cz, T_T7, T_T8, mesh_path, rho, beta, D_L_sub, D_R_sub, D_standard);
     
     % 3. Temporal Pivot Mapping (Subject Space)
     mesh_data = load(mesh_path, 'Vertices');
@@ -75,6 +76,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     
     info.rho = rho;
     info.beta = beta;
+    info.D_standard = D_standard;
     info.procrustes_residual = norm(P_subj - (tr.b * P_temp * tr.T + tr.c(1,:)));
 end
 
