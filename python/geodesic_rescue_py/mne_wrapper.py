@@ -14,11 +14,22 @@ import mne
 import numpy as np
 from .core import GeodesicRescue
 
-def apply_geodesic_rescue(raw, rho=0.248383, beta=0.235926, parity='RAS', verbose=True):
+def apply_geodesic_rescue(raw, rho=None, beta=None, parity='RAS',
+                          D_standard=None, cohort=None, verbose=True):
     """
     Appends predicted LHJ/RHJ (LPA/RPA) coordinates to mne.io.Raw.
     Coordinates are assumed to be in meters (MNE standard).
     If parity is 'ALS' or 'BIDS-Brainstorm', automatically swaps [-Y, X, Z] to restore RAS.
+
+    Weight precedence: explicit rho/beta/D_standard kwargs >  cohort preset >
+    hard default (LEMON_Polhemus_Adult, ~16.8 mm held-out on LEMON HTJ GT).
+
+    Parameters
+    ----------
+    cohort : str, optional
+        Cohort tag from weight_zoo.json (e.g. 'LEMON_Polhemus_Adult',
+        'EGI_HydroCel_256_Adult', 'lemon', 'default'). See
+        ``load_cohort_preset`` for the full list.
     """
     if not isinstance(raw, mne.io.BaseRaw):
         raise ValueError("Input must be an MNE Raw object.")
@@ -68,9 +79,9 @@ def apply_geodesic_rescue(raw, rho=0.248383, beta=0.235926, parity='RAS', verbos
     if verbose:
         print(f"Anchors found: Cz={Cz_m}, T7={T7_m}, T8={T8_m}")
 
-    # 2. Execute Rescue
-    rescuer = GeodesicRescue()
-    pLHJ, pRHJ = rescuer.rescue(Cz_m, T7_m, T8_m, rho=rho, beta=beta)
+    # 2. Execute Rescue (weight resolution happens in GeodesicRescue.__init__)
+    rescuer = GeodesicRescue(rho=rho, beta=beta, D_standard=D_standard, cohort=cohort)
+    pLHJ, pRHJ = rescuer.rescue(Cz_m, T7_m, T8_m)
 
     if verbose:
         print(f"Predicted LHJ (LPA): {pLHJ}")

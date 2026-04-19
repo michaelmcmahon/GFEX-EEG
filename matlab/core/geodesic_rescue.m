@@ -25,14 +25,25 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
         offset = 4;
     end
     
-    % Optional Params
+    % Optional Params (hard defaults mirror weight_zoo.json 'default' alias)
     rho = 0.248383; beta = 0.235926; mesh_path = ''; parity = 'RAS'; D_standard = 0.1388;
+    cohort = '';
+    rho_set = false; beta_set = false; Dstd_set = false;
     for i = offset:2:nargin
-        if strcmpi(varargin{i}, 'rho'),   rho = varargin{i+1}; end
-        if strcmpi(varargin{i}, 'beta'),  beta = varargin{i+1}; end
+        if strcmpi(varargin{i}, 'rho'),   rho = varargin{i+1}; rho_set = true; end
+        if strcmpi(varargin{i}, 'beta'),  beta = varargin{i+1}; beta_set = true; end
         if strcmpi(varargin{i}, 'mesh'),  mesh_path = varargin{i+1}; end
         if strcmpi(varargin{i}, 'parity'), parity = varargin{i+1}; end
-        if strcmpi(varargin{i}, 'D_standard'), D_standard = varargin{i+1}; end
+        if strcmpi(varargin{i}, 'D_standard'), D_standard = varargin{i+1}; Dstd_set = true; end
+        if strcmpi(varargin{i}, 'cohort'), cohort = varargin{i+1}; end
+    end
+
+    % Cohort preset lookup (explicit rho/beta/D_standard kwargs win)
+    if ~isempty(cohort)
+        preset = load_cohort_preset(cohort);
+        if ~rho_set,  rho  = preset.rho;        end
+        if ~beta_set, beta = preset.beta;       end
+        if ~Dstd_set, D_standard = preset.D_standard; end
     end
     
     if strcmpi(parity, 'ALS') || strcmpi(parity, 'BIDS-Brainstorm')
@@ -77,6 +88,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     info.rho = rho;
     info.beta = beta;
     info.D_standard = D_standard;
+    info.cohort = cohort;
     info.procrustes_residual = norm(P_subj - (tr.b * P_temp * tr.T + tr.c(1,:)));
 end
 

@@ -33,7 +33,35 @@ During our analysis of the LEMON dataset, we proved that standard Brainstorm BID
 
 For 95% of use cases, researchers can rely on the LEMON-tuned weights (`rho = 0.248383`, `beta = 0.235926`, tuned against manually-annotated HTJ ground truth on N=10 LEMON subjects, held-out mean error 16.82 mm on N=10 independent subjects). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize BIDS double-scaling traps and execute **RAS-to-ALS** axis transposition.
 
-For non-standard hardware (EGI, dense pediatric caps, custom Polhemus protocols) researchers are advised to retune via the FNO metaheuristic on a small cohort-specific training set — see Tier 2 below.
+For non-standard hardware (EGI, dense pediatric caps, custom Polhemus protocols) researchers are advised to retune via the FNO metaheuristic on a small cohort-specific training set — see Tier 2 below. Contributed cohort-specific weights can be consumed via the **cohort-preset** mechanism (see next section).
+
+### Cohort Presets (Weight Zoo)
+
+Production weights are versioned in `data/weight_zoo.json`. Any wrapper accepts a `cohort` tag to load a preset without specifying ρ/β manually:
+
+```matlab
+% MATLAB — cohort preset (zoo lookup)
+[pL, pR] = geodesic_rescue(Cz, T7, T8, 'cohort', 'LEMON_Polhemus_Adult');
+% or with a named alias:
+[pL, pR] = geodesic_rescue(Cz, T7, T8, 'cohort', 'lemon');
+
+% Explicit rho/beta override the preset:
+[pL, pR] = geodesic_rescue(Cz, T7, T8, 'cohort', 'LEMON_Polhemus_Adult', 'rho', 0.25);
+```
+
+```python
+# Python
+from geodesic_rescue_py import apply_geodesic_rescue, load_cohort_preset
+
+raw = apply_geodesic_rescue(raw, cohort='LEMON_Polhemus_Adult')
+
+# Inspect a preset directly:
+preset = load_cohort_preset('lemon')   # {'rho': 0.248383, 'beta': 0.235926, ...}
+```
+
+**Currently shipped production entries:** `LEMON_Polhemus_Adult` (default, 16.82 mm held-out).
+
+**Pending community contribution:** `CapTrak_Adult`, `EGI_HydroCel_256_Adult`, `Neuroscan_SynAmps_Adult` — entries are reserved in the zoo with `status: pending_tune`. Researchers with MRI-bearing cohorts on those setups can run the Tier 2 FNO tuner and submit a PR adding a production entry. See `data/weight_zoo.json` `contribution` block for the submission checklist.
 
 ### Validation & Accuracy
 

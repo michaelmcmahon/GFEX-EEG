@@ -1,0 +1,45 @@
+{
+  "$schema_version": "1.0",
+  "description": "GFEX-EEG cohort-specific FNO-tuned weight sets. See README 'Validation & Accuracy' and Tier 2 sections.",
+  "aliases": {
+    "default": "LEMON_Polhemus_Adult",
+    "lemon": "LEMON_Polhemus_Adult"
+  },
+  "weight_sets": {
+    "LEMON_Polhemus_Adult": {
+      "status": "production",
+      "rho": 0.248383,
+      "beta": 0.235926,
+      "D_standard": 0.1388,
+      "description": "LEMON cohort (ds000221): Polhemus per-subject digitization, adult population. Default weights for general-purpose deployment when no hardware-specific preset is available.",
+      "tuning": {
+        "dataset": "ds000221",
+        "tuning_date": "2026-04-19",
+        "n_training": 10,
+        "n_holdout": 10,
+        "training_subjects_range": "sub-010061..sub-010070",
+        "holdout_subjects_range": "sub-010071..sub-010080",
+        "holdout_mean_error_mm": 16.82,
+        "holdout_sd_error_mm": 4.03,
+        "method": "FAR grid 20x20 + NEAR Nelder-Mead",
+        "gt_landmark": "HTJ (manually tagged in MRI.SCS.LPA/RPA)"
+      }
+    },
+    "CapTrak_Adult": {
+      "status": "pending_tune",
+      "note": "Public CapTrak datasets ds007353 (HAD, N=27) and ds005811-ds005810 (NOD, N=19) ship packed electrodes.tsv files (single EEG input replicated across all subjects). A cohort-specific tune requires a fresh CapTrak dataset with genuine per-subject digitization."
+    },
+    "EGI_HydroCel_256_Adult": {
+      "status": "pending_tune",
+      "note": "OK cohort (ds006525, EGI HydroCel 256ch with ~25 mm cap standoff) gives ~22 mm error with LEMON-tuned weights. Dedicated tune pending a dataset with MRI ground truth."
+    },
+    "Neuroscan_SynAmps_Adult": {
+      "status": "pending_tune",
+      "note": "Reserved. Awaiting community contribution or internal tuning on a Neuroscan cohort with MRI."
+    }
+  },
+  "contribution": {
+    "how_to_add": "Tune via geodesic_fno_tuner (MATLAB) or GeodesicTuner (Python) on a pilot subset with MRI HTJ ground truth, then submit a PR adding a new entry to weight_sets with status='production' and a full 'tuning' block. Minimum quality bar: N_training >= 5, N_holdout >= 5, held-out error under the threshold appropriate for the hardware class (see README).",
+    "documentation": "See README 'Tier 2: Metaheuristic Tuning Mode' section."
+  }
+}

@@ -19,9 +19,22 @@ function [elec] = ft_geodesic_rescue(cfg, elec)
         return;
     end
 
-    % Standard defaults
-    rho  = ft_getopt(cfg, 'rho', 0.248383);   % LEMON-tuned FNO optimal (2026-04-19)
-    beta = ft_getopt(cfg, 'beta', 0.235926);  % LEMON-tuned FNO scaling limit (2026-04-19)
+    % Weight resolution: explicit cfg.rho/beta/D_standard > cfg.cohort preset > hard default
+    cohort = ft_getopt(cfg, 'cohort', '');
+    rho_cfg        = ft_getopt(cfg, 'rho',        []);
+    beta_cfg       = ft_getopt(cfg, 'beta',       []);
+    Dstd_cfg       = ft_getopt(cfg, 'D_standard', []);
+
+    rho        = 0.248383; % Hard default (LEMON-tuned, 2026-04-19)
+    beta       = 0.235926;
+    D_standard = 0.1388;
+    if ~isempty(cohort)
+        preset = load_cohort_preset(cohort);
+        rho = preset.rho; beta = preset.beta; D_standard = preset.D_standard;
+    end
+    if ~isempty(rho_cfg),  rho        = rho_cfg;  end
+    if ~isempty(beta_cfg), beta       = beta_cfg; end
+    if ~isempty(Dstd_cfg), D_standard = Dstd_cfg; end
 
     % 1. Hardware-Agnostic Channel Extraction
     idx_Cz = find(strcmpi(elec.label, 'Cz') | strcmpi(elec.label, 'E36') | strcmpi(elec.label, '80'));
@@ -52,8 +65,9 @@ function [elec] = ft_geodesic_rescue(cfg, elec)
     % Force to absolute Meter-Space
     Cz_m = Cz_raw * scale_f; T7_m = T7_raw * scale_f; T8_m = T8_raw * scale_f;
 
-    % 3. Execute Geodesic Core Engine 
-    [pLHJ_m, pRHJ_m, ~] = geodesic_rescue(Cz_m, T7_m, T8_m, 'rho', rho, 'beta', beta);
+    % 3. Execute Geodesic Core Engine
+    [pLHJ_m, pRHJ_m, ~] = geodesic_rescue(Cz_m, T7_m, T8_m, ...
+        'rho', rho, 'beta', beta, 'D_standard', D_standard);
 
     % 4. Axis Transposition (RAS to ALS) and Scale Reversal
     % MNI (RAS)    = [Right, Anterior, Superior]

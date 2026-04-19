@@ -10,18 +10,33 @@
 % * [License Text or link to License file]
 % *******************************************************************************/
 
-function [EEG, com] = pop_geodesic_rescue(EEG, rho, beta)
+function [EEG, com] = pop_geodesic_rescue(EEG, rho, beta, cohort)
 % POP_GEODESIC_RESCUE (V21.7 - Invincible EEGLAB Wrapper)
 % Includes: Empirical Scale Shield and RAS-to-ALS Axis Transposition.
+%
+% Weight precedence: explicit rho/beta > cohort preset (from weight_zoo.json)
+% > hard default (LEMON-tuned, 2026-04-19).
 
     com = '';
     if exist('geodesic_rescue', 'file') == 0
         base_path = fileparts(mfilename('fullpath'));
         addpath(fullfile(base_path, '..', '..', 'core'));
     end
-    if nargin < 3
-        rho = 0.248383;  % LEMON-tuned FNO optimal (2026-04-19)
-        beta = 0.235926; % LEMON-tuned FNO scaling limit (2026-04-19)
+
+    if nargin < 4, cohort = ''; end
+    if nargin < 3 || isempty(beta), beta = []; end
+    if nargin < 2 || isempty(rho),  rho  = []; end
+
+    % Resolve weights: explicit > cohort preset > hard default
+    if ~isempty(cohort)
+        preset = load_cohort_preset(cohort);
+        if isempty(rho),  rho  = preset.rho;        end
+        if isempty(beta), beta = preset.beta;       end
+        D_standard = preset.D_standard;
+    else
+        if isempty(rho),  rho  = 0.248383;  end  % Hard default (LEMON-tuned)
+        if isempty(beta), beta = 0.235926; end
+        D_standard = 0.1388;
     end
 
     % 1. Hardware-Agnostic Channel Extraction
@@ -63,7 +78,8 @@ function [EEG, com] = pop_geodesic_rescue(EEG, rho, beta)
     T8_m = T8_raw * scale_factor;
 
     % 3. Execute Core Engine (Meter-Space Output)
-    [pLHJ_m, pRHJ_m, ~] = geodesic_rescue(Cz_m, T7_m, T8_m, 'rho', rho, 'beta', beta);
+    [pLHJ_m, pRHJ_m, ~] = geodesic_rescue(Cz_m, T7_m, T8_m, ...
+        'rho', rho, 'beta', beta, 'D_standard', D_standard);
 
     % 4. Axis Transposition (RAS to ALS) and Scale Reversal
     % MNI (RAS)    = [Right, Anterior, Superior]
@@ -86,7 +102,11 @@ function [EEG, com] = pop_geodesic_rescue(EEG, rho, beta)
     EEG.chanlocs(num_chans + 2).Z = RHJ_als(3);
     EEG.chanlocs(num_chans + 2).type = 'FID';
 
-    com = sprintf('EEG = pop_geodesic_rescue(EEG, %f, %f);', rho, beta);
+    if ~isempty(cohort)
+        com = sprintf('EEG = pop_geodesic_rescue(EEG, %f, %f, ''%s'');', rho, beta, cohort);
+    else
+        com = sprintf('EEG = pop_geodesic_rescue(EEG, %f, %f);', rho, beta);
+    end
     fprintf('SUCCESS: Rescued LPA/RPA fiducials appended (Scale Factor: %.4f).\n', scale_factor);
 end
 

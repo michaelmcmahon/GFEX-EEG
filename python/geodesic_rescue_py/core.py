@@ -126,7 +126,24 @@ def predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, vertices, faces, rho, b
     return LHJ_mni, RHJ_mni, iCz, iT7, iT8
 
 class GeodesicRescue:
-    def __init__(self, mesh_path=None, rho=0.248383, beta=0.235926, parity='RAS', D_standard=0.1388):
+    # Hard defaults (mirror weight_zoo.json 'default' alias)
+    _DEFAULT_RHO        = 0.248383
+    _DEFAULT_BETA       = 0.235926
+    _DEFAULT_D_STANDARD = 0.1388
+
+    def __init__(self, mesh_path=None, rho=None, beta=None, parity='RAS',
+                 D_standard=None, cohort=None):
+        # Resolve weights with precedence: explicit kwarg > cohort preset > hard default
+        if cohort is not None:
+            from .weight_zoo import load_cohort_preset
+            preset = load_cohort_preset(cohort)
+            if rho is None:        rho = preset['rho']
+            if beta is None:       beta = preset['beta']
+            if D_standard is None: D_standard = preset['D_standard']
+        if rho is None:        rho        = self._DEFAULT_RHO
+        if beta is None:       beta       = self._DEFAULT_BETA
+        if D_standard is None: D_standard = self._DEFAULT_D_STANDARD
+
         is_default_mesh = False
         if mesh_path is None:
             base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -143,12 +160,21 @@ class GeodesicRescue:
         self.beta = beta
         self.parity = parity
         self.D_standard = D_standard
+        self.cohort = cohort
 
-    def rescue(self, Cz_m, T7_m, T8_m, rho=None, beta=None, D_standard=None):
+    def rescue(self, Cz_m, T7_m, T8_m, rho=None, beta=None, D_standard=None, cohort=None):
         """
         Main rescue function. Expects coordinates in meters.
         Returns predicted LHJ, RHJ in meters.
         """
+        # Per-call cohort override (rare; usually set at __init__ time)
+        if cohort is not None:
+            from .weight_zoo import load_cohort_preset
+            preset = load_cohort_preset(cohort)
+            if rho is None:         rho = preset['rho']
+            if beta is None:        beta = preset['beta']
+            if D_standard is None:  D_standard = preset['D_standard']
+
         rho_val = self.rho if rho is None else rho
         beta_val = self.beta if beta is None else beta
         D_std_val = self.D_standard if D_standard is None else D_standard
