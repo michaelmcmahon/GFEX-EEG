@@ -28,6 +28,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     % Optional Params (hard defaults mirror weight_zoo.json 'default' alias)
     rho = 0.248383; beta = 0.235926; mesh_path = ''; parity = 'RAS'; D_standard = 0.1388;
     cohort = '';
+    mlp_correction = false;   % opt-in MLP residual correction (requires cohort)
     rho_set = false; beta_set = false; Dstd_set = false;
     for i = offset:2:nargin
         if strcmpi(varargin{i}, 'rho'),   rho = varargin{i+1}; rho_set = true; end
@@ -36,6 +37,7 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
         if strcmpi(varargin{i}, 'parity'), parity = varargin{i+1}; end
         if strcmpi(varargin{i}, 'D_standard'), D_standard = varargin{i+1}; Dstd_set = true; end
         if strcmpi(varargin{i}, 'cohort'), cohort = varargin{i+1}; end
+        if strcmpi(varargin{i}, 'mlp_correction'), mlp_correction = varargin{i+1}; end
     end
 
     % Cohort preset lookup (explicit rho/beta/D_standard kwargs win)
@@ -90,6 +92,31 @@ function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
     info.D_standard = D_standard;
     info.cohort = cohort;
     info.procrustes_residual = norm(P_subj - (tr.b * P_temp * tr.T + tr.c(1,:)));
+
+    % 4. OPT-IN MLP RESIDUAL CORRECTION (Tier 1.5)
+    % Applied after pivot-lock projection. Loads cohort-specific MLP weights
+    % file per weight_zoo.json 'mlp_weights_file' entry; if absent, errors.
+    info.mlp_applied = false;
+    if mlp_correction
+        if isempty(cohort)
+            error('GeodesicRescue:MLPCohortRequired', ...
+                'mlp_correction=true requires a cohort kwarg for weight lookup.');
+        end
+        preset = load_cohort_preset(cohort);
+        if ~isfield(preset, 'mlp_weights_file') || isempty(preset.mlp_weights_file)
+            error('GeodesicRescue:MLPNotAvailable', ...
+                'Cohort "%s" has no mlp_weights_file registered in weight_zoo.json.', cohort);
+        end
+        base_path = fileparts(mfilename('fullpath'));
+        mlp_path = fullfile(base_path, '..', '..', 'data', 'mlp', preset.mlp_weights_file);
+        [pLHJ, pRHJ, mlp_info] = apply_mlp_correction(Cz_m, T7_m, T8_m, pLHJ, pRHJ, mlp_path);
+        info.mlp_applied    = true;
+        info.mlp_weights    = preset.mlp_weights_file;
+        info.mlp_dL         = mlp_info.dL;
+        info.mlp_dR         = mlp_info.dR;
+        info.mlp_correction_magnitude_L_mm = mlp_info.dL_magnitude_mm;
+        info.mlp_correction_magnitude_R_mm = mlp_info.dR_magnitude_mm;
+    end
 end
 
 function [Cz, T7, T8] = extract_standard_anchors(coords)

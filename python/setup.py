@@ -34,7 +34,11 @@ setup(
         "mne",
     ],
     package_data={
-        "geodesic_rescue_py": ["data/ICBM152_scalp.mat", "data/weight_zoo.json"],
+        "geodesic_rescue_py": [
+            "data/ICBM152_scalp.mat",
+            "data/weight_zoo.json",
+            "data/mlp/*.mat",
+        ],
     },
     description="Python implementation of the Geodesic Rescue Toolbox for EEG fiducial extrapolation.",
     long_description=open("README.md").read() if os.path.exists("README.md") else "",

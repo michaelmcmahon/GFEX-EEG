@@ -85,4 +85,6 @@ function preset = load_cohort_preset(tag, zoo_path)
     preset.D_standard  = entry.D_standard;
     preset.status      = entry.status;
     if isfield(entry, 'description'), preset.description = entry.description; end
+    if isfield(entry, 'mlp_weights_file'), preset.mlp_weights_file = entry.mlp_weights_file; end
+    if isfield(entry, 'mlp_holdout_mean_err_mm'), preset.mlp_holdout_mean_err_mm = entry.mlp_holdout_mean_err_mm; end
 end

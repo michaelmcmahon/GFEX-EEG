@@ -11,7 +11,9 @@
       "rho": 0.248383,
       "beta": 0.235926,
       "D_standard": 0.1388,
-      "description": "LEMON cohort (ds000221): Polhemus per-subject digitization, adult population. Default weights for general-purpose deployment when no hardware-specific preset is available.",
+      "mlp_weights_file": "mlp_LEMON_Polhemus_Adult.mat",
+      "mlp_holdout_mean_err_mm": 4.76,
+      "description": "LEMON cohort (ds000221): Polhemus per-subject digitization, adult population. Default weights for general-purpose deployment when no hardware-specific preset is available. A residual-correction MLP (trained on LEMON HTJ GT) is available via mlp_correction=true for Tier 1.5 accuracy.",
       "tuning": {
         "dataset": "ds000221",
         "tuning_date": "2026-04-19",
@@ -23,6 +25,20 @@
         "holdout_sd_error_mm": 4.03,
         "method": "FAR grid 20x20 + NEAR Nelder-Mead",
         "gt_landmark": "HTJ (manually tagged in MRI.SCS.LPA/RPA)"
+      },
+      "mlp": {
+        "training_date": "2026-04-19",
+        "architecture": "15-input -> 64 ReLU -> 6-output (residual learning)",
+        "n_parameters": 1414,
+        "n_training": 88,
+        "n_holdout": 10,
+        "geodesic_baseline_holdout_mm": 16.82,
+        "mlp_corrected_holdout_mm": 4.76,
+        "mlp_corrected_holdout_sd_mm": 2.06,
+        "improvement_over_geodesic_mm": 12.06,
+        "improvement_pct": 71.7,
+        "cv_best_held_fold_mm": 4.63,
+        "excluded_subjects": ["sub-010060", "sub-010195"]
       }
     },
     "CapTrak_Adult": {
