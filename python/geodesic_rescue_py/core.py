@@ -126,7 +126,7 @@ def predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, vertices, faces, rho, b
     return LHJ_mni, RHJ_mni, iCz, iT7, iT8
 
 class GeodesicRescue:
-    def __init__(self, mesh_path=None, rho=0.000000, beta=1.983084, parity='RAS', D_standard=0.1388):
+    def __init__(self, mesh_path=None, rho=0.248383, beta=0.235926, parity='RAS', D_standard=0.1388):
         is_default_mesh = False
         if mesh_path is None:
             base_dir = os.path.dirname(os.path.abspath(__file__))

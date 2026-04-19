@@ -2,7 +2,7 @@
 
 **A Hardware-Agnostic Spatial Extrapolation Engine for EEG Fiducials**
 
-GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate exact spatial locations for the Left and Right Pre-Auricular Points (LPA/RPA) using only the structural geometry of the Cz, T7, and T8 electrodes.
+GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate **Helix-Tragus Junction (HTJ)** coordinates — a geometrically unambiguous anatomical landmark — using only the positions of the Cz, T7, and T8 electrodes. For downstream compatibility, predicted HTJ coordinates are written into the standard `LPA`/`RPA` slots of MNE-Python Raw / EEGLAB / FieldTrip / Brainstorm data structures; existing source-imaging pipelines consume them as anatomical fiducials without modification.
 
 ## Distribution Architecture
 
@@ -31,7 +31,19 @@ During our analysis of the LEMON dataset, we proved that standard Brainstorm BID
 
 ## Tier 1: "Black-Box" Wrappers (For Standard Adult Cohorts)
 
-For 95% of use cases, researchers can rely on the pre-trained weights (`rho = 0.000000`, `beta = 1.983084`). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize BIDS double-scaling traps and execute **RAS-to-ALS** axis transposition.
+For 95% of use cases, researchers can rely on the LEMON-tuned weights (`rho = 0.248383`, `beta = 0.235926`, tuned against manually-annotated HTJ ground truth on N=10 LEMON subjects, held-out mean error 16.82 mm on N=10 independent subjects). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize BIDS double-scaling traps and execute **RAS-to-ALS** axis transposition.
+
+For non-standard hardware (EGI, dense pediatric caps, custom Polhemus protocols) researchers are advised to retune via the FNO metaheuristic on a small cohort-specific training set — see Tier 2 below.
+
+### Validation & Accuracy
+
+On a held-out set of N=10 LEMON subjects, the Tier 1 weights achieve **16.82 mm mean error (SD 4.03 mm)** against manually-annotated HTJ ground truth.
+
+Two caveats researchers should know when interpreting or reproducing public-dataset benchmarks:
+
+- **HAD (ds007353) and NOD (ds005811-ds005810) ship "packed" `*_electrodes.tsv` files.** The same Cz/T7/T8 template is replicated across all subjects and sessions (82 of 83 files share a single SHA1 hash in our audit). Per-subject accuracy numbers on these datasets therefore reflect anatomical scatter of the MRI HTJ landmark at a *single fixed algorithm output*, not genuine per-subject generalization. Treat as one effective EEG input point, not N=46.
+
+- **Cohort-specific FNO retune recommended** when deploying to non-Polhemus digitization (CapTrak, EGI). The Tier 1 LEMON-tuned weights transfer approximately; per-cohort retune via Tier 2 typically improves accuracy by several millimetres.
 
 ### EEGLAB
 Simply add `matlab/blackbox/eeglab` to your MATLAB path. The plugin will appear under `Tools > Geodesic Origin Rescue`.

@@ -20,8 +20,8 @@ function [EEG, com] = pop_geodesic_rescue(EEG, rho, beta)
         addpath(fullfile(base_path, '..', '..', 'core'));
     end
     if nargin < 3
-        rho = 0.0054;  % Pre-trained FNO optimal dynamic ratio
-        beta = 1.1885; % Pre-trained FNO scaling limit
+        rho = 0.248383;  % LEMON-tuned FNO optimal (2026-04-19)
+        beta = 0.235926; % LEMON-tuned FNO scaling limit (2026-04-19)
     end
 
     % 1. Hardware-Agnostic Channel Extraction

@@ -20,8 +20,8 @@ function [elec] = ft_geodesic_rescue(cfg, elec)
     end
 
     % Standard defaults
-    rho  = ft_getopt(cfg, 'rho', 0.0054);
-    beta = ft_getopt(cfg, 'beta', 1.1885);
+    rho  = ft_getopt(cfg, 'rho', 0.248383);   % LEMON-tuned FNO optimal (2026-04-19)
+    beta = ft_getopt(cfg, 'beta', 0.235926);  % LEMON-tuned FNO scaling limit (2026-04-19)
 
     % 1. Hardware-Agnostic Channel Extraction
     idx_Cz = find(strcmpi(elec.label, 'Cz') | strcmpi(elec.label, 'E36') | strcmpi(elec.label, '80'));

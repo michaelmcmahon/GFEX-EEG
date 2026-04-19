@@ -14,7 +14,7 @@ import mne
 import numpy as np
 from .core import GeodesicRescue
 
-def apply_geodesic_rescue(raw, rho=0.000000, beta=1.983084, parity='RAS', verbose=True):
+def apply_geodesic_rescue(raw, rho=0.248383, beta=0.235926, parity='RAS', verbose=True):
     """
     Appends predicted LHJ/RHJ (LPA/RPA) coordinates to mne.io.Raw.
     Coordinates are assumed to be in meters (MNE standard).
