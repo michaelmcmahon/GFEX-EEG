@@ -26,7 +26,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="geodesic-rescue-py",
-    version="0.1.0",
+    version="1.1.0",
     packages=find_packages(),
     install_requires=[
         "numpy",
@@ -34,7 +34,11 @@ setup(
         "mne",
     ],
     package_data={
-        "geodesic_rescue_py": ["data/ICBM152_scalp.mat", "data/weight_zoo.json"],
+        "geodesic_rescue_py": [
+            "data/ICBM152_scalp.mat",
+            "data/weight_zoo.json",
+            "data/mlp/*.mat",
+        ],
     },
     description="Python implementation of the Geodesic Rescue Toolbox for EEG fiducial extrapolation.",
     long_description=open("README.md").read() if os.path.exists("README.md") else "",
