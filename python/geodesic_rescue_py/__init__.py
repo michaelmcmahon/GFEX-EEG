@@ -16,4 +16,4 @@ from .tuner import GeodesicTuner
 from .weight_zoo import load_cohort_preset
 from .mlp_correction import apply_mlp_correction
 
-__version__ = "1.1.0.dev0"
+__version__ = "1.1.0"

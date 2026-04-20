@@ -1,8 +1,10 @@
-# GFEX-EEG Toolbox (V1.0.0)
+# GFEX-EEG Toolbox (V1.1.0)
 
 **A Hardware-Agnostic Spatial Extrapolation Engine for EEG Fiducials**
 
 GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate **Helix-Tragus Junction (HTJ)** coordinates — a geometrically unambiguous anatomical landmark — using only the positions of the Cz, T7, and T8 electrodes. For downstream compatibility, predicted HTJ coordinates are written into the standard `LPA`/`RPA` slots of MNE-Python Raw / EEGLAB / FieldTrip / Brainstorm data structures; existing source-imaging pipelines consume them as anatomical fiducials without modification.
+
+**V1.1.0 adds an optional Tier 1.5 residual-correction MLP layered on top of the geodesic prediction**, reducing LEMON held-out error from 16.82 mm to 4.76 mm (71.7% reduction). The MLP is opt-in via a single kwarg; the default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
 
 ## Distribution Architecture
 
@@ -65,13 +67,20 @@ preset = load_cohort_preset('lemon')   # {'rho': 0.248383, 'beta': 0.235926, ...
 
 ### Validation & Accuracy
 
-On a held-out set of N=10 LEMON subjects, the Tier 1 weights achieve **16.82 mm mean error (SD 4.03 mm)** against manually-annotated HTJ ground truth.
+On a held-out set of N=10 LEMON subjects with manually-annotated HTJ ground truth:
+
+| Mode | Mean error | SD | Improvement vs pure geodesic |
+|---|---|---|---|
+| Tier 1 pure geodesic | **16.82 mm** | 4.03 | — |
+| Tier 1.5 (+ MLP residual correction) | **4.76 mm** | 2.06 | **71.7% reduction** |
+
+The Tier 1.5 result survives a 4-test data-leak diligence battery (subject separation; label-shuffle permutation test with 3× degradation on scrambled labels; alternative-holdout rotation at 5.29 ± 0.62 mm across 5 random 10-subject splits; FNO-seen vs unseen within training at 0.15 mm gap). Full report: `Fiducial_Extrapolation_Exp/Results/c_MLP_Diligence_20260420.json`.
 
 Two caveats researchers should know when interpreting or reproducing public-dataset benchmarks:
 
 - **HAD (ds007353) and NOD (ds005811-ds005810) ship "packed" `*_electrodes.tsv` files.** The same Cz/T7/T8 template is replicated across all subjects and sessions (82 of 83 files share a single SHA1 hash in our audit). Per-subject accuracy numbers on these datasets therefore reflect anatomical scatter of the MRI HTJ landmark at a *single fixed algorithm output*, not genuine per-subject generalization. Treat as one effective EEG input point, not N=46.
 
-- **Cohort-specific FNO retune recommended** when deploying to non-Polhemus digitization (CapTrak, EGI). The Tier 1 LEMON-tuned weights transfer approximately; per-cohort retune via Tier 2 typically improves accuracy by several millimetres.
+- **Cohort-specific FNO retune recommended** when deploying to non-Polhemus digitization (CapTrak, EGI). The Tier 1 LEMON-tuned weights transfer approximately; per-cohort retune via Tier 2 typically improves accuracy by several millimetres. Similarly, the Tier 1.5 MLP is LEMON-trained; retraining per cohort is recommended for publication-grade accuracy on non-Polhemus data.
 
 ### EEGLAB
 Simply add `matlab/blackbox/eeglab` to your MATLAB path. The plugin will appear under `Tools > Geodesic Origin Rescue`.
@@ -98,6 +107,35 @@ from geodesic_rescue_py import apply_geodesic_rescue
 raw = mne.io.read_raw_fif("my_data.fif")
 raw_rescued = apply_geodesic_rescue(raw)
 ```
+
+## Tier 1.5: MLP Residual Correction (opt-in)
+
+A small learned residual correction can be layered on top of the geodesic prediction to reduce held-out error by ~70% on the LEMON cohort. The MLP learns systematic per-subject discrepancies between the geodesic's prediction and the true HTJ anatomy (notably the differential cap-standoff bias that a single rigid+scale Procrustes cannot absorb — see `Fiducial_Extrapolation_Exp/Results/c_anchor_augmentation_finding_20260419.md`).
+
+**Architecture:** 1 hidden layer (15-input → 64 ReLU → 6-output), 1414 parameters, trained on 88 LEMON subjects' HTJ ground truth (2 QC-flagged subjects excluded). Inference is pure matmul (no ML-framework runtime dependency — numpy / MATLAB matrix ops only).
+
+Enable by passing `mlp_correction=true` and a `cohort` tag:
+
+```matlab
+% MATLAB
+[pL, pR, info] = geodesic_rescue(Cz, T7, T8, ...
+    'cohort', 'LEMON_Polhemus_Adult', ...
+    'mlp_correction', true);
+% info.mlp_applied, info.mlp_correction_magnitude_L_mm/_R_mm surfaced
+```
+
+```python
+# Python
+from geodesic_rescue_py import apply_geodesic_rescue
+
+raw_rescued = apply_geodesic_rescue(raw,
+                                    cohort='LEMON_Polhemus_Adult',
+                                    mlp_correction=True)
+```
+
+**Cohort-specific:** MLP weights are trained per-cohort. `LEMON_Polhemus_Adult` ships ready (4.76 mm held-out on LEMON). To deploy to a new cohort, retrain on pilot HTJ-tagged data using `Fiducial_Extrapolation_Exp/Scripts/c_Train_LEMON_MLP.py` as a template, then add an entry to `data/weight_zoo.json` pointing to the new weights file.
+
+**Reproducibility:** the pre-MLP pure-geodesic state is preserved at git tag `v1.0.0-pure-geodesic`. Any paper citing the pre-V1.1 result should pin to that tag. Default path (without `mlp_correction`) is bit-identical to the tagged state — `c_Complete_Master_Scoreboard.m` wrapper parity test still passes 28/28 at 0.0000 mm.
 
 ## Tier 2: Metaheuristic Tuning Mode (For Advanced Users)
 
