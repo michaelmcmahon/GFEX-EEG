@@ -41,6 +41,41 @@
         "excluded_subjects": ["sub-010060", "sub-010195"]
       }
     },
+    "WH_Neuromag70_Adult": {
+      "status": "production",
+      "rho": 0.248383,
+      "beta": 0.235926,
+      "D_standard": 0.1388,
+      "mlp_weights_file": "mlp_WH_Neuromag70_Adult.mat",
+      "mlp_holdout_mean_err_mm": 8.16,
+      "description": "Wakeman-Henson Face Recognition cohort (ds000117-ds002718, Neuromag/Elekta 70-ch EasyCap, older adults). Dataset required forensic re-pairing (original BIDS shipped subject<->EEG scrambled; N=15 after sub-01 orphan exclusion). Apply cohort='WH_Neuromag70_Adult' with mlp_correction=true for Neuromag 70-ch Polhemus-digitized data.",
+      "tuning": {
+        "dataset": "ds000117-ds002718_RESCUED",
+        "tuning_date": "2026-04-22",
+        "note": "Uses LEMON-tuned rho/beta/D_standard (pure geodesic shared with LEMON). Cohort-specific learning lives in the MLP.",
+        "gt_landmark": "HTJ (manually tagged in MRI.SCS.LPA/RPA after biological head-width fingerprint rescue)"
+      },
+      "mlp": {
+        "training_date": "2026-04-22",
+        "architecture": "15-input -> 64 ReLU -> 6-output (residual learning)",
+        "n_parameters": 1414,
+        "alpha": 0.01,
+        "n_training": 10,
+        "n_holdout": 5,
+        "seed": 42,
+        "training_subjects": ["sub-08","sub-09","sub-11","sub-05","sub-02","sub-13","sub-16","sub-12","sub-07","sub-04"],
+        "holdout_subjects":  ["sub-06","sub-14","sub-03","sub-15","sub-10"],
+        "geodesic_baseline_holdout_mm": 21.60,
+        "mlp_corrected_holdout_mm": 8.16,
+        "mlp_corrected_holdout_sd_mm": 1.55,
+        "improvement_over_geodesic_mm": 13.44,
+        "improvement_pct": 62.2,
+        "cross_cohort_LEMON_MLP_on_WH_mm": 12.30,
+        "cross_cohort_gap_closed_mm": 4.14,
+        "hp_selection": "LeaveOneOut CV on N=10 training pool; best of 7 configs",
+        "excluded_subjects": ["sub-01 (orphan MRI, no matching EEG in ds002718)"]
+      }
+    },
     "CapTrak_Adult": {
       "status": "pending_tune",
       "note": "Public CapTrak datasets ds007353 (HAD, N=27) and ds005811-ds005810 (NOD, N=19) ship packed electrodes.tsv files (single EEG input replicated across all subjects). A cohort-specific tune requires a fresh CapTrak dataset with genuine per-subject digitization."

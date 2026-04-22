@@ -1,10 +1,10 @@
-# GFEX-EEG Toolbox (V1.1.0)
+# GFEX-EEG Toolbox (V1.1.1)
 
 **A Hardware-Agnostic Spatial Extrapolation Engine for EEG Fiducials**
 
 GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate **Helix-Tragus Junction (HTJ)** coordinates — a geometrically unambiguous anatomical landmark — using only the positions of the Cz, T7, and T8 electrodes. For downstream compatibility, predicted HTJ coordinates are written into the standard `LPA`/`RPA` slots of MNE-Python Raw / EEGLAB / FieldTrip / Brainstorm data structures; existing source-imaging pipelines consume them as anatomical fiducials without modification.
 
-**V1.1.0 adds an optional Tier 1.5 residual-correction MLP layered on top of the geodesic prediction**, reducing LEMON held-out error from 16.82 mm to 4.76 mm (71.7% reduction). The MLP is opt-in via a single kwarg; the default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
+**V1.1.1 adds a second production Tier 1.5 MLP** — `WH_Neuromag70_Adult` (Wakeman-Henson Neuromag 70-ch cohort, 8.16 mm held-out, closes 54% of cross-cohort gap vs the LEMON MLP applied to W-H). Opt in via `cohort='WH_Neuromag70_Adult', mlp_correction=true`. **V1.1.0 added the optional Tier 1.5 residual-correction MLP** layered on top of the geodesic prediction, reducing LEMON held-out error from 16.82 mm to 4.76 mm (71.7% reduction). The MLP is opt-in via a single kwarg; the default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
 
 ## Distribution Architecture
 
