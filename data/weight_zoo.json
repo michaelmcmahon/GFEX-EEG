@@ -77,8 +77,34 @@
       }
     },
     "CapTrak_Adult": {
-      "status": "pending_tune",
-      "note": "Public CapTrak datasets ds007353 (HAD, N=27) and ds005811-ds005810 (NOD, N=19) ship packed electrodes.tsv files (single EEG input replicated across all subjects). A cohort-specific tune requires a fresh CapTrak dataset with genuine per-subject digitization."
+      "status": "production",
+      "rho": 0.248383,
+      "beta": 0.235926,
+      "D_standard": 0.1388,
+      "mlp_weights_file": "mlp_CapTrak_Adult.mat",
+      "mlp_holdout_mean_err_mm": 8.52,
+      "description": "Shirley Ryan AbilityLab TMS-EEG-MRI-fMRI-DWI cohort (ds004024, N=13 controls, BrainProducts CapTrak digitisation, adult population). The only genuinely per-subject EEG-MRI cohort in the OpenNeuro 31-cohort audit. Apply cohort='CapTrak_Adult' with mlp_correction=true for CapTrak-digitised data.",
+      "tuning": {
+        "dataset": "ds004024",
+        "tuning_date": "2026-05-02",
+        "note": "Uses LEMON-tuned rho/beta/D_standard (pure geodesic shared with LEMON and W-H). Cohort-specific learning lives in the MLP.",
+        "gt_landmark": "HTJ (manually tagged in MRI.SCS.LPA/RPA in Brainstorm)"
+      },
+      "mlp": {
+        "training_date": "2026-05-02",
+        "architecture": "15-input -> 32 ReLU -> 6-output (residual learning)",
+        "alpha": 0.01,
+        "n_subjects": 13,
+        "cv": "single-level Leave-One-Out (no separate train/test split given small N)",
+        "geodesic_baseline_mean_mm": 18.36,
+        "geodesic_baseline_sd_mm": 6.31,
+        "mlp_loo_mean_mm": 8.52,
+        "mlp_loo_sd_mm": 5.71,
+        "improvement_over_geodesic_mm": 9.85,
+        "improvement_pct": 53.6,
+        "hp_selection": "LeaveOneOut CV on N=13; best of 7 configs",
+        "training_subjects": ["sub-CON001","sub-CON006","sub-CON008","sub-CON009","sub-CON015","sub-CON019","sub-CON020","sub-CON021","sub-CON022","sub-CON025","sub-CON026","sub-CON029","sub-CON031"]
+      }
     },
     "EGI_HydroCel_256_Adult": {
       "status": "pending_tune",
