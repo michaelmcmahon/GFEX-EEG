@@ -1,0 +1,39 @@
+{
+  "$schema_version": "1.0",
+  "description": "Golden output values for quickstart.py / quickstart.m. Captured 2026-05-31 from toolbox release v1.1.4 (commit pending). Inputs are the canonical template Cz/T7/T8 anchors shipped in matlab/core/template_anchors.m and python/geodesic_rescue_py/template_anchors.py.",
+  "input_anchors_m": {
+    "Cz": [0.011240, 0.025921, 0.141134],
+    "T7": [-0.089174, -0.001327, -0.006348],
+    "T8": [0.096880, -0.014286, -0.005819]
+  },
+  "tolerance_m": 1.0e-5,
+  "tolerance_note": "0.01 mm Euclidean. Engine is deterministic; passing margin in practice is machine-precision (< 1e-12) on a healthy install.",
+
+  "pure_geodesic": {
+    "cohort": "LEMON_Polhemus_Adult",
+    "mlp_correction": false,
+    "LHJ": [-0.09101699973067885, -0.03453133203031224, -0.05497997557054298],
+    "RHJ": [0.0901168635406814, -0.015252983816377925, -0.062139438734905815]
+  },
+
+  "lemon_mlp": {
+    "cohort": "LEMON_Polhemus_Adult",
+    "mlp_correction": true,
+    "LHJ": [-0.07709191538808385, -0.024460965635807783, -0.0014766207622546393],
+    "RHJ": [0.0850239015021078, -0.00853983954755081, -0.004513472947956558]
+  },
+
+  "wh_mlp": {
+    "cohort": "WH_Neuromag70_Adult",
+    "mlp_correction": true,
+    "LHJ": [-0.12843714410646706, -0.05771261485109747, -0.028998996630177232],
+    "RHJ": [0.1148258931103476, -0.022229687867550817, -0.03979050417794089]
+  },
+
+  "captrak_mlp": {
+    "cohort": "CapTrak_Adult",
+    "mlp_correction": true,
+    "LHJ": [-0.10381647373226766, -0.0232966729954635, -0.02303326264563576],
+    "RHJ": [0.1099652541965088, -0.0063765445063921275, -0.02771504842231108]
+  }
+}

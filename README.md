@@ -1,10 +1,26 @@
-# GFEX-EEG Toolbox (V1.1.1)
+# GFEX-EEG Toolbox (V1.1.4)
 
 **A Hardware-Agnostic Spatial Extrapolation Engine for EEG Fiducials**
 
 GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate **Helix-Tragus Junction (HTJ)** coordinates — a geometrically unambiguous anatomical landmark — using only the positions of the Cz, T7, and T8 electrodes. For downstream compatibility, predicted HTJ coordinates are written into the standard `LPA`/`RPA` slots of MNE-Python Raw / EEGLAB / FieldTrip / Brainstorm data structures; existing source-imaging pipelines consume them as anatomical fiducials without modification.
 
-**V1.1.1 adds a second production Tier 1.5 MLP** — `WH_Neuromag70_Adult` (Wakeman-Henson Neuromag 70-ch cohort, 8.16 mm held-out, closes 54% of cross-cohort gap vs the LEMON MLP applied to W-H). Opt in via `cohort='WH_Neuromag70_Adult', mlp_correction=true`. **V1.1.0 added the optional Tier 1.5 residual-correction MLP** layered on top of the geodesic prediction, reducing LEMON held-out error from 16.82 mm to 4.76 mm (71.7% reduction). The MLP is opt-in via a single kwarg; the default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
+**V1.1.4 adds a reviewer-friendly end-to-end sanity check** at [`reproduce_results/`](./reproduce_results) — `quickstart.py` and `quickstart.m` exercise all four prediction modes (pure geodesic + three production cohort MLPs) using shipped template anchors and golden-value assertions. No external dataset download required; runs in under a second. **V1.1.3 fixed the CapTrak_Adult MLP packaging and weights format** so all three production cohort MLPs (`LEMON_Polhemus_Adult` 4.76 mm, `WH_Neuromag70_Adult` 8.16 mm, `CapTrak_Adult` 8.52 mm held-out) are now runnable through both the MATLAB and Python inference paths. **V1.1.0 introduced the optional Tier 1.5 residual-correction MLP**; opt in via the `mlp_correction=true` kwarg. The default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
+
+## Quickstart
+
+To verify the toolbox loads and runs correctly on your machine, without downloading any external dataset:
+
+```bash
+cd reproduce_results
+python quickstart.py
+```
+
+```matlab
+>> cd reproduce_results
+>> quickstart
+```
+
+Both scripts run all four production prediction modes on shipped template anchors and assert against hardcoded golden values. Expected output on a clean install: **all 4 demos PASS** in well under a second. See [`reproduce_results/README.md`](./reproduce_results/README.md) for details and instructions on extending the quickstart to your own per-subject anchor data.
 
 ## Distribution Architecture
 
@@ -21,6 +37,7 @@ GFEX-EEG/
 ├── python/                        <- Python Native Library (geodesic-rescue-py)
 │   └── geodesic_rescue_py/        <- MNE-Python Wrapper & Tuner
 ├── reproducibility/               <- Experimental Code Pipeline (Paper Validation)
+├── reproduce_results/             <- Quickstart sanity check (Python + MATLAB)
 └── README.md
 ```
 
