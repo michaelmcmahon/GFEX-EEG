@@ -1,4 +1,4 @@
-# GFEX-EEG Toolbox (V1.1.4)
+# GFEX-EEG Toolbox (V1.1.5)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20580899.svg)](https://doi.org/10.5281/zenodo.20580899)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,7 +7,7 @@
 
 GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate **Helix-Tragus Junction (HTJ)** coordinates — a geometrically unambiguous anatomical landmark — using only the positions of the Cz, T7, and T8 electrodes. For downstream compatibility, predicted HTJ coordinates are written into the standard `LPA`/`RPA` slots of MNE-Python Raw / EEGLAB / FieldTrip / Brainstorm data structures; existing source-imaging pipelines consume them as anatomical fiducials without modification.
 
-**V1.1.4 adds a reviewer-friendly end-to-end sanity check** at [`reproduce_results/`](./reproduce_results) — `quickstart.py` and `quickstart.m` exercise all four prediction modes (pure geodesic + three production cohort MLPs) using shipped template anchors and golden-value assertions. No external dataset download required; runs in under a second. **V1.1.3 fixed the CapTrak_Adult MLP packaging and weights format** so all three production cohort MLPs (`LEMON_Polhemus_Adult` 4.76 mm, `WH_Neuromag70_Adult` 8.16 mm, `CapTrak_Adult` 8.52 mm held-out) are now runnable through both the MATLAB and Python inference paths. **V1.1.0 introduced the optional Tier 1.5 residual-correction MLP**; opt in via the `mlp_correction=true` kwarg. The default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
+**V1.1.5 adds the MIT LICENSE file** at the repo root and the CITATION.cff metadata needed for the Zenodo deposit and GitHub's "Cite this repository" button. **V1.1.4 added a reviewer-friendly end-to-end sanity check** at [`reproduce_results/`](./reproduce_results) — `quickstart.py` and `quickstart.m` exercise all four production prediction modes (pure geodesic + three cohort MLPs) using shipped template anchors and golden-value assertions; no external dataset download required, runs in under a second. **V1.1.3 fixed the CapTrak_Adult MLP packaging and weights format** so all three production cohort MLPs (`LEMON_Polhemus_Adult` 4.76 mm, `WH_Neuromag70_Adult` 8.16 mm, `CapTrak_Adult` 8.52 mm held-out) are runnable through both the MATLAB and Python inference paths. **V1.1.0 introduced the optional Tier 1.5 residual-correction MLP**; opt in via the `mlp_correction=true` kwarg. The default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
 
 ## Quickstart
 
@@ -81,20 +81,25 @@ raw = apply_geodesic_rescue(raw, cohort='LEMON_Polhemus_Adult')
 preset = load_cohort_preset('lemon')   # {'rho': 0.248383, 'beta': 0.235926, ...}
 ```
 
-**Currently shipped production entries:** `LEMON_Polhemus_Adult` (default, 16.82 mm held-out).
+**Currently shipped production entries (held-out HTJ error against MRI ground truth, Tier 1.5 MLP-corrected):**
 
-**Pending community contribution:** `CapTrak_Adult`, `EGI_HydroCel_256_Adult`, `Neuroscan_SynAmps_Adult` — entries are reserved in the zoo with `status: pending_tune`. Researchers with MRI-bearing cohorts on those setups can run the Tier 2 FNO tuner and submit a PR adding a production entry. See `data/weight_zoo.json` `contribution` block for the submission checklist.
+- `LEMON_Polhemus_Adult` — default; Polhemus per-subject digitization; **4.76 mm** (Leipzig LEMON cohort, `ds000221`, N=10 held-out)
+- `WH_Neuromag70_Adult` — Neuromag 70-ch cap; **8.16 mm** (Wakeman-Henson cohort, `ds000117`/`ds002718`, N=5 held-out)
+- `CapTrak_Adult` — BrainProducts CapTrak digitization; **8.52 mm** (Shirley Ryan AbilityLab TMS-EEG-MRI-fMRI-DWI cohort, `ds004024`, N=13 leave-one-out CV)
+
+**Pending community contribution:** `EGI_HydroCel_256_Adult`, `Neuroscan_SynAmps_Adult` — entries are reserved in the zoo with `status: pending_tune`. Researchers with MRI-bearing cohorts on those setups can run the Tier 2 FNO tuner and submit a PR adding a production entry. See `data/weight_zoo.json` `contribution` block for the submission checklist.
 
 ### Validation & Accuracy
 
-On a held-out set of N=10 LEMON subjects with manually-annotated HTJ ground truth:
+Held-out HTJ error against per-subject manually-tagged MRI ground truth, across three independent EEG-MRI cohorts spanning Polhemus, Neuromag, and BrainProducts CapTrak digitization hardware:
 
-| Mode | Mean error | SD | Improvement vs pure geodesic |
-|---|---|---|---|
-| Tier 1 pure geodesic | **16.82 mm** | 4.03 | — |
-| Tier 1.5 (+ MLP residual correction) | **4.76 mm** | 2.06 | **71.7% reduction** |
+| Cohort | Hardware | N held-out | Tier 1 (pure geodesic) | Tier 1.5 (+ MLP) | Improvement |
+|---|---|---|---|---|---|
+| LEMON (`ds000221`) | Polhemus | 10 | 16.82 mm (SD 4.03) | **4.76 mm** (SD 2.06) | 71.7% |
+| Wakeman-Henson (`ds000117`/`ds002718`) | Neuromag 70-ch | 5 | 19.54 mm (SD 4.70) | **8.16 mm** (SD 1.55) | 58.2% |
+| Shirley Ryan AbilityLab (`ds004024`) | BrainProducts CapTrak | 13 (LOO-CV) | 18.36 mm (SD 6.31) | **8.52 mm** (SD 5.71) | 53.6% |
 
-The Tier 1.5 result survives a 4-test data-leak diligence battery (subject separation; label-shuffle permutation test with 3× degradation on scrambled labels; alternative-holdout rotation at 5.29 ± 0.62 mm across 5 random 10-subject splits; FNO-seen vs unseen within training at 0.15 mm gap). Full report: `Fiducial_Extrapolation_Exp/Results/c_MLP_Diligence_20260420.json`.
+The LEMON 4.76 mm Tier 1.5 result is statistically indistinguishable from a measured ~5 mm inter-modality annotation floor (Polhemus stylus vs MRI tagging) across both LEMON and Wakeman-Henson cohorts, indicating that further algorithmic refinement on this manifold is precluded by human annotation noise rather than by method limitation. The Tier 1.5 result also survives a 4-test data-leak diligence battery (subject separation; label-shuffle permutation test with 3× degradation on scrambled labels; alternative-holdout rotation at 5.29 ± 0.62 mm across 5 random 10-subject splits; FNO-seen vs unseen within training at 0.15 mm gap). Full report: `Fiducial_Extrapolation_Exp/Results/c_MLP_Diligence_20260420.json`.
 
 Two caveats researchers should know when interpreting or reproducing public-dataset benchmarks:
 
@@ -153,7 +158,7 @@ raw_rescued = apply_geodesic_rescue(raw,
                                     mlp_correction=True)
 ```
 
-**Cohort-specific:** MLP weights are trained per-cohort. `LEMON_Polhemus_Adult` ships ready (4.76 mm held-out on LEMON). To deploy to a new cohort, retrain on pilot HTJ-tagged data using `Fiducial_Extrapolation_Exp/Scripts/c_Train_LEMON_MLP.py` as a template, then add an entry to `data/weight_zoo.json` pointing to the new weights file.
+**Cohort-specific:** MLP weights are trained per-cohort. Three cohort MLPs ship ready: `LEMON_Polhemus_Adult` (4.76 mm held-out, Polhemus), `WH_Neuromag70_Adult` (8.16 mm, Neuromag 70-ch), and `CapTrak_Adult` (8.52 mm, BrainProducts CapTrak). To deploy to a new cohort, retrain on pilot HTJ-tagged data using `Fiducial_Extrapolation_Exp/Scripts/c_Train_LEMON_MLP.py` as a template, then add an entry to `data/weight_zoo.json` pointing to the new weights file.
 
 **Reproducibility:** the pre-MLP pure-geodesic state is preserved at git tag `v1.0.0-pure-geodesic`. Any paper citing the pre-V1.1 result should pin to that tag. Default path (without `mlp_correction`) is bit-identical to the tagged state — `c_Complete_Master_Scoreboard.m` wrapper parity test still passes 28/28 at 0.0000 mm.
 
@@ -174,7 +179,18 @@ results = tuner.tune()
 ```
 
 ---
-**Authors:** Michael McMahon / University of Galway  
+
+## Citation
+
+If you use this software, please cite both the toolbox (via the Zenodo DOI) and the accompanying manuscript when it is published. The CITATION.cff file at the repository root provides ready-to-export APA / BibTeX / EndNote formats via GitHub's "Cite this repository" button.
+
+**Toolbox archive:** [10.5281/zenodo.20580899](https://doi.org/10.5281/zenodo.20580899) (v1.1.5, released 2026-06-07)
+
+**Manuscript:** McMahon, M., Schukat, M., & Barrett, E. "GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free EEG source imaging." (In preparation; *Imaging Neuroscience*.)
+
+---
+
+**Authors:** Michael McMahon, Michael Schukat, Enda Barrett — University of Galway  
 **Repository:** [https://github.com/michaelmcmahon/GFEX-EEG](https://github.com/michaelmcmahon/GFEX-EEG)  
 **License:** MIT License  
-**Date:** 2026
+**Released:** 2026-06-07 (v1.1.5)
