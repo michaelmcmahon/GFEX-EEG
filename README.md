@@ -103,7 +103,7 @@ The LEMON 4.76 mm Tier 1.5 result is statistically indistinguishable from a meas
 
 Two caveats researchers should know when interpreting or reproducing public-dataset benchmarks:
 
-- **HAD (ds007353) and NOD (ds005811-ds005810) ship "packed" `*_electrodes.tsv` files.** The same Cz/T7/T8 template is replicated across all subjects and sessions (82 of 83 files share a single SHA1 hash in our audit). Per-subject accuracy numbers on these datasets therefore reflect anatomical scatter of the MRI HTJ landmark at a *single fixed algorithm output*, not genuine per-subject generalization. Treat as one effective EEG input point, not N=46.
+
 
 - **Cohort-specific FNO retune recommended** when deploying to non-Polhemus digitization (CapTrak, EGI). The Tier 1 LEMON-tuned weights transfer approximately; per-cohort retune via Tier 2 typically improves accuracy by several millimetres. Similarly, the Tier 1.5 MLP is LEMON-trained; retraining per cohort is recommended for publication-grade accuracy on non-Polhemus data.
 
@@ -186,7 +186,7 @@ If you use this software, please cite both the toolbox (via the Zenodo DOI) and 
 
 **Toolbox archive:** [10.5281/zenodo.20580899](https://doi.org/10.5281/zenodo.20580899) (v1.1.5, released 2026-06-07)
 
-**Manuscript:** McMahon, M., Schukat, M., & Barrett, E. "GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free EEG source imaging." (In preparation; *Imaging Neuroscience*.)
+**Manuscript:** McMahon, M., Schukat, M., & Barrett, E. "GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free EEG source imaging." (Submitted for publication.)
 
 ---
 
@@ -194,3 +194,4 @@ If you use this software, please cite both the toolbox (via the Zenodo DOI) and 
 **Repository:** [https://github.com/michaelmcmahon/GFEX-EEG](https://github.com/michaelmcmahon/GFEX-EEG)  
 **License:** MIT License  
 **Released:** 2026-06-07 (v1.1.5)
+
