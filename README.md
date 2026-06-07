@@ -101,11 +101,7 @@ Held-out HTJ error against per-subject manually-tagged MRI ground truth, across 
 
 The LEMON 4.76 mm Tier 1.5 result is statistically indistinguishable from a measured ~5 mm inter-modality annotation floor (Polhemus stylus vs MRI tagging) across both LEMON and Wakeman-Henson cohorts, indicating that further algorithmic refinement on this manifold is precluded by human annotation noise rather than by method limitation. The Tier 1.5 result also survives a 4-test data-leak diligence battery (subject separation; label-shuffle permutation test with 3× degradation on scrambled labels; alternative-holdout rotation at 5.29 ± 0.62 mm across 5 random 10-subject splits; FNO-seen vs unseen within training at 0.15 mm gap). Full report: `Fiducial_Extrapolation_Exp/Results/c_MLP_Diligence_20260420.json`.
 
-Two caveats researchers should know when interpreting or reproducing public-dataset benchmarks:
-
-
-
-- **Cohort-specific FNO retune recommended** when deploying to non-Polhemus digitization (CapTrak, EGI). The Tier 1 LEMON-tuned weights transfer approximately; per-cohort retune via Tier 2 typically improves accuracy by several millimetres. Similarly, the Tier 1.5 MLP is LEMON-trained; retraining per cohort is recommended for publication-grade accuracy on non-Polhemus data.
+**Deploying to hardware outside the three shipped cohort presets.** The production presets — `LEMON_Polhemus_Adult` (Polhemus), `WH_Neuromag70_Adult` (Neuromag 70-ch), and `CapTrak_Adult` (BrainProducts CapTrak) — cover the dominant adult digitization classes. For other hardware (EGI HydroCel, Neuroscan, dense pediatric caps, etc.), the pure-geodesic Tier 1 path with the LEMON-tuned defaults transfers approximately and is often within several millimetres of post-retune accuracy. For publication-grade results on non-shipped hardware classes, run a Tier 2 FNO retune of ρ/β on a small pilot HTJ-tagged subset and (ideally) a Tier 1.5 MLP retrain on the same; submit the resulting preset back to the zoo via the `data/weight_zoo.json` `contribution` block.
 
 ### EEGLAB
 Simply add `matlab/blackbox/eeglab` to your MATLAB path. The plugin will appear under `Tools > Geodesic Origin Rescue`.
