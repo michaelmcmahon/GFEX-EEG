@@ -1,14 +1,52 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# * DOI: [If available]
-# * Date: 2026
-# *
-# * [License Text or link to License file]
-# *******************************************************************************/
+"""GFEX-EEG: MNE-Python black-box wrapper
+
+Single-function entry point that appends GFEX-EEG-predicted LHJ/RHJ
+coordinates to an ``mne.io.Raw`` object. Handles parity restoration
+(ALS / BIDS-Brainstorm -> RAS) on the digitizer points and dispatches
+to the core geodesic engine with optional cohort preset + Tier 1.5
+MLP residual correction.
+
+Usage
+-----
+    from geodesic_rescue_py import apply_geodesic_rescue
+    raw_out = apply_geodesic_rescue(raw, cohort='LEMON_Polhemus_Adult')
+
+Notes
+-----
+Coordinates assumed to be in metres (MNE standard). Weight precedence:
+explicit rho/beta/D_standard kwargs > cohort preset > hard default
+(LEMON_Polhemus_Adult).
+
+Citation
+--------
+If you use this code in research, please cite both the software archive
+and the accompanying manuscript:
+
+    [Software]
+    McMahon, M., Schukat, M., & Barrett, E. (2026).
+    GFEX-EEG Toolbox [Software].
+    Zenodo. https://doi.org/10.5281/zenodo.20580899
+
+    [Paper]
+    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+    GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free
+    EEG source imaging.
+
+See also CITATION.cff in the repository root (machine-readable).
+Current version: see ``geodesic_rescue_py.__version__`` (single source
+of truth in ``__init__.py``).
+
+Repository
+----------
+https://github.com/michaelmcmahon/GFEX-EEG
+Issues: https://github.com/michaelmcmahon/GFEX-EEG/issues
+
+License
+-------
+MIT — see LICENSE in the repository root.
+"""
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 import mne
 import numpy as np

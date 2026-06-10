@@ -1,21 +1,34 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
-% =========================================================================
-% SCRIPT: Verify_12_Traps_Scoreboard.m
-% Objective: Compare New Ingestion (12-Trap) vs. Old Ingestion (V13.5)
-% target: Proving zero regression on working cohorts.
-% =========================================================================
 function Verify_12_Traps_Scoreboard()
+%VERIFY_12_TRAPS_SCOREBOARD  Zero-regression scoreboard for the 12-trap sanitizer.
+%
+%   Compares the V15.1 ingestion path (12-trap sanitizer) against the
+%   legacy V13.5 ingestion path on the set of working cohorts. Target
+%   is zero regression — every error number from the legacy path must
+%   be reproduced to machine precision.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — 12-trap regression scoreboard (MATLAB)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
     raw_dir  = fullfile(root_dir, 'Data_Clean');

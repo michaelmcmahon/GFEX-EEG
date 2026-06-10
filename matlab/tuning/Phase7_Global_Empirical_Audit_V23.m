@@ -1,20 +1,34 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
 function Phase7_Global_Empirical_Audit_V23()
-% PHASE 7: GLOBAL MASTER EMPIRICAL AUDIT (V23.0)
-% Objective: Generate the definitive multi-toolbox validation scoreboard.
-% Uses dynamic BIDS extraction to ensure all cohorts are represented.
-% Toolboxes: Standalone MATLAB, EEGLAB, FieldTrip, Brainstorm, and Python.
+%PHASE7_GLOBAL_EMPIRICAL_AUDIT_V23  Multi-toolbox cross-platform scoreboard generator.
+%
+%   Phase 7 of the empirical audit pipeline (V23.0). Generates the
+%   definitive multi-toolbox validation scoreboard, using dynamic BIDS
+%   extraction to ensure all cohorts are represented. Toolboxes covered:
+%   Standalone MATLAB, EEGLAB, FieldTrip, Brainstorm, and Python.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Global empirical audit (MATLAB, V23.0)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     fprintf('\n=========================================================================\n');
     fprintf('  GEODESIC RESCUE TOOLBOX: GLOBAL MASTER EMPIRICAL AUDIT (V23.0)\n');

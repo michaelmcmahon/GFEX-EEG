@@ -1,21 +1,39 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
 function [EEG, com] = pop_geodesic_rescue(EEG, rho, beta, cohort)
-% POP_GEODESIC_RESCUE (V21.7 - Invincible EEGLAB Wrapper)
-% Includes: Empirical Scale Shield and RAS-to-ALS Axis Transposition.
+%POP_GEODESIC_RESCUE  EEGLAB GUI/function wrapper for GFEX-EEG geodesic rescue.
 %
-% Weight precedence: explicit rho/beta > cohort preset (from weight_zoo.json)
-% > hard default (LEMON-tuned, 2026-04-19).
+%   [EEG, com] = POP_GEODESIC_RESCUE(EEG, rho, beta, cohort)
+%
+%   Generates missing LHJ / RHJ fiducials on an EEGLAB dataset using
+%   the GFEX-EEG core engine, including Empirical Scale Shield and
+%   automatic RAS-to-ALS axis transposition.
+%
+%   Weight precedence: explicit rho/beta > cohort preset (from
+%   weight_zoo.json) > hard default (LEMON-tuned, 2026-04-19).
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — EEGLAB pop wrapper (MATLAB, V21.7)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     com = '';
     if exist('geodesic_rescue', 'file') == 0

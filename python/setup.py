@@ -1,32 +1,20 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# * DOI: [If available]
-# * Date: 2026
-# *
-# * [License Text or link to License file]
-# *******************************************************************************/
+"""GFEX-EEG: Python package manifest (setuptools)
 
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# * DOI: [If available]
-# * Date: 2026
-# *
-# * [License Text or link to License file]
-# *******************************************************************************/
+Installs ``geodesic_rescue_py`` — the Python implementation of the
+GFEX-EEG toolbox for MRI-free EEG source-imaging fiducial recovery.
+
+See also CITATION.cff in the repository root (machine-readable).
+Repository: https://github.com/michaelmcmahon/GFEX-EEG
+License: MIT — see LICENSE in the repository root.
+"""
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 from setuptools import setup, find_packages
 
 setup(
     name="geodesic-rescue-py",
-    version="1.1.3",
+    version="1.1.5",
     packages=find_packages(),
     install_requires=[
         "numpy",

@@ -1,30 +1,48 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% *******************************************************************************/
-
 function preset = load_cohort_preset(tag, zoo_path)
-% LOAD_COHORT_PRESET  Retrieve a cohort-specific FNO weight preset from the zoo.
+%LOAD_COHORT_PRESET  Retrieve a cohort-specific FNO weight preset from the zoo.
 %
-%   preset = load_cohort_preset(tag)
-%   preset = load_cohort_preset(tag, zoo_path)
+%   preset = LOAD_COHORT_PRESET(tag)
+%   preset = LOAD_COHORT_PRESET(tag, zoo_path)
 %
 %   Inputs:
-%     tag       - Cohort tag string (e.g. 'LEMON_Polhemus_Adult', 'lemon',
+%     tag       - Cohort tag string (e.g. 'LEMON_Polhemus_Adult',
+%                 'WH_Neuromag70_Adult', 'CapTrak_Adult', 'lemon',
 %                 'default'). Aliases are resolved transparently.
 %     zoo_path  - (Optional) Path to weight_zoo.json. Defaults to
 %                 <matlab/core>/../../data/weight_zoo.json.
 %
 %   Output:
 %     preset    - Struct with fields: rho, beta, D_standard, tag, status,
-%                 description (when available).
+%                 description (when available), mlp_weights_file (when
+%                 the cohort ships a Tier 1.5 residual MLP).
 %
 %   Errors:
 %     - If tag is not found, lists available production tags.
 %     - If tag has status == 'pending_tune', raises with note explaining why.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Cohort-specific weight-zoo loader (MATLAB)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     if nargin < 2 || isempty(zoo_path)
         base_path = fileparts(mfilename('fullpath'));

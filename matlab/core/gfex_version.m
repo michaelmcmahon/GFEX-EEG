@@ -1,11 +1,16 @@
-% ==============================================================================
-%   GFEX-EEG TOOLBOX — NCS registration diagnostic (MATLAB)
-% ------------------------------------------------------------------------------
-%   diagnostic_mri_ncs.m
-%   Check the NCS (non-linear coordinate system) registration structure
-%   for the Hong Kong cohort MRI — investigates the unit-scale trap
-%   that placed Hong Kong digitizer points in 10^-6 m space.
+function v = gfex_version()
+%GFEX_VERSION  Return the current GFEX-EEG toolbox version string.
 %
+%   v = GFEX_VERSION() returns the string identifying the installed
+%   GFEX-EEG toolbox release (e.g., '1.1.5'). This is the single source
+%   of truth for the MATLAB side of the toolbox — file headers and
+%   wrappers refer to this function rather than hard-coding versions.
+%
+%   See also: gfex_version_atleast.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Version constant
+% ------------------------------------------------------------------------------
 %   Authors:
 %     Michael McMahon  (ORCID: 0000-0002-5266-3194)
 %     Michael Schukat  (ORCID: 0000-0002-6908-6100)
@@ -13,6 +18,7 @@
 %     University of Galway, Galway, Ireland
 %
 %   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
 %
 %   CITATION (please cite both)
 %     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
@@ -21,26 +27,12 @@
 %     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
 %                GFEX-EEG: Geodesic recovery of anatomical fiducials for
 %                MRI-free EEG source imaging.
+%     See also CITATION.cff in the repository root (machine-readable).
 %
 %   LICENSE
 %     SPDX-License-Identifier: MIT
 %     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+%     See LICENSE in the repository root.
 % ==============================================================================
-
-mri_path = 'C:\MoBI_Research\brainstorm_db\ds004718\anat\ds004718_sub-HK001\subjectimage_sub-HK001_desc-normalized_T1w.mat';
-sMri = load(mri_path);
-
-fprintf('--- MRI DIAGNOSTIC: %s ---\n', mri_path);
-if isfield(sMri, 'NCS')
-    disp('NCS Field found.');
-    disp(sMri.NCS);
-    if isfield(sMri.NCS, 'y')
-        fprintf('Deformation field y size: [%s]\n', num2str(size(sMri.NCS.y)));
-    else
-        disp('Deformation field y is MISSING (Linear Only).');
-    end
-else
-    disp('CRITICAL: NCS Field is MISSING.');
+    v = '1.1.5';
 end
-
-exit;

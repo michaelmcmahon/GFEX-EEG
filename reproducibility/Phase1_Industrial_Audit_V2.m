@@ -1,21 +1,34 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
-% =========================================================================
-% PHASE 1: INDUSTRIAL FORENSIC AUDIT (V2.1 - GT-SYNC HARDENED)
-% Objective: Definitively identify math traps across the Master Cohort.
-% New Trap: Trap 13 - Ground Truth Proximity Check
-% =========================================================================
 function Phase1_Industrial_Audit_V2()
+%PHASE1_INDUSTRIAL_AUDIT_V2  Forensic audit of coordinate-system traps across cohorts.
+%
+%   Phase 1 forensic audit (V2.1, GT-sync hardened). Definitively
+%   identifies math traps across the Master Cohort by replaying each
+%   coordinate-system transformation and cross-checking against MRI
+%   ground truth. Includes Trap 13 (Ground Truth Proximity Check).
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Phase 1 industrial forensic audit (MATLAB, V2.1)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     % 1. INITIALIZE BRAINSTORM
     addpath('C:\MoBI_Research\brainstorm3');

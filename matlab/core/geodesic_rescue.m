@@ -1,19 +1,63 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
 function [pLHJ, pRHJ, info] = geodesic_rescue(varargin)
-% GEODESIC_RESCUE (V21.8 - Pure Core)
-% Strict Meter-Space Engine for Geodesic Extrapolation.
-% Expects Meters, returns Meters. No internal scaling.
+%GEODESIC_RESCUE  Predict left/right helix-tragus junction from three scalp anchors.
+%
+%   [pLHJ, pRHJ, info] = GEODESIC_RESCUE(Cz, T7, T8) runs the deterministic
+%   geodesic walk (V2.2) on the ICBM152 scalp manifold and returns the
+%   predicted helix-tragus junction coordinates (LHJ, RHJ) in
+%   right-anterior-superior (RAS) metres. INFO contains diagnostic fields
+%   from the walk (path arc lengths, scaling ratios, anchors used).
+%
+%   USAGE
+%       % Default LEMON-tuned weights
+%       [pLHJ, pRHJ] = geodesic_rescue(Cz, T7, T8);
+%
+%       % Cohort preset (loads preset rho / beta / D_standard)
+%       [pLHJ, pRHJ] = geodesic_rescue(Cz, T7, T8, 'cohort', 'LEMON_Polhemus_Adult');
+%
+%       % Opt-in MLP residual correction (Tier 1.5)
+%       [pLHJ, pRHJ] = geodesic_rescue(Cz, T7, T8, ...
+%                                     'cohort', 'LEMON_Polhemus_Adult', ...
+%                                     'mlp_correction', true);
+%
+%   INPUTS expect metres in RAS by default. Engine is strict meter-space —
+%   no internal unit scaling. Set 'parity', 'ALS' for ALS-frame inputs.
+%
+%   NOTES
+%       Production weights (LEMON-tuned 2026-04-19): rho=0.248383,
+%       beta=0.235926, D_standard=0.1388. Bit-identical parity with the
+%       Python implementation (28 of 28 cross-platform tests at 0.0000 mm
+%       wrapper-parity).
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Core extrapolation engine (MATLAB)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%     See also CITATION.cff in the repository root (machine-readable).
+%
+%   VERSION
+%     For the current package version, call gfex_version() (single source
+%     of truth in matlab/core/gfex_version.m).
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+%     See LICENSE in the repository root.
+% ==============================================================================
 
     % 1. Parse Inputs (Flexible Signature)
     if istable(varargin{1}) || isstruct(varargin{1})

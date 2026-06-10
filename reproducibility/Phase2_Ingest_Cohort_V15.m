@@ -1,20 +1,35 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
-% =========================================================================
-% PHASE 2: UNIVERSAL INGESTION V15.1 (FIDUCIAL ENABLED)
-% Objective: Ingest any cohort and capture EEG Fiducials for V19 Bridge.
-% =========================================================================
 function Phase2_Ingest_Cohort_V15(cohort_id)
+%PHASE2_INGEST_COHORT_V15  Universal BIDS cohort ingestion with fiducial capture.
+%
+%   Phase 2 universal ingestion (V15.1, fiducial-enabled). Ingests any
+%   cohort from the canonical BIDS layout and captures EEG fiducials
+%   ready for the V19 origin-bridging Procrustes step. Outputs are
+%   written to ``Data_Processed/<cohort_id>/`` and the matching
+%   Brainstorm protocol under ``brainstorm_db/<cohort_id>/anat/``.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Phase 2 universal BIDS ingestion (MATLAB, V15.1)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
     data_dir = fullfile(root_dir, 'Data_Clean', cohort_id);

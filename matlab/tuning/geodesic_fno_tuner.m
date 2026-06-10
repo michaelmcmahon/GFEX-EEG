@@ -1,27 +1,48 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
 function [optimal_rho, optimal_beta, info] = geodesic_fno_tuner(training_data, varargin)
-% GEODESIC_FNO_TUNER (V1.0 - Metaheuristic Tuning Mode)
-% Derives custom rho and beta parameters for specialized hardware/cohorts.
+%GEODESIC_FNO_TUNER  Far/Near metaheuristic tuner for rho / beta hyperparameters.
 %
-% INPUTS:
-%   training_data: Struct array with fields:
-%       .Cz, .T7, .T8 : [1x3] EEG anchor coordinates (Meters)
-%       .gtLPA, .gtRPA: [1x3] Ground-truth MRI coordinates (Meters)
+%   [optimal_rho, optimal_beta, info] = GEODESIC_FNO_TUNER(training_data, ...)
 %
-% OUTPUTS:
-%   optimal_rho, optimal_beta: The tuned scaling parameters.
-%   info: Diagnostic struct with residuals and iteration counts.
+%   Derives custom rho and beta parameters for specialized hardware
+%   or cohorts. Two-phase optimization: PSO global search (Far) then
+%   Nelder-Mead simplex refinement (Near). Loss is the radial-telescope
+%   metric (V37.0).
+%
+%   INPUTS
+%     training_data : struct array with fields
+%        .Cz, .T7, .T8  : [1x3] EEG anchor coordinates (metres)
+%        .gtLPA, .gtRPA : [1x3] Ground-truth MRI coordinates (metres)
+%
+%   OUTPUTS
+%     optimal_rho, optimal_beta : tuned scaling parameters
+%     info                      : diagnostic struct (residuals, iter counts)
+%
+%   Bit-identical loss-function output with the Python tuner
+%   (geodesic_rescue_py.tuner.GeodesicTuner).
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Far/Near metaheuristic tuner (MATLAB, V1.0)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 %
 
     % 1. Initialization

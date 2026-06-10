@@ -1,25 +1,43 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.1.0-dev
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% *******************************************************************************/
-
 function [pL_corr, pR_corr, info] = apply_mlp_correction(Cz, T7, T8, pL_geo, pR_geo, mlp_path)
-% APPLY_MLP_CORRECTION  Residual-learning MLP correction on top of geodesic prediction.
+%APPLY_MLP_CORRECTION  Tier 1.5 residual-correction MLP on top of geodesic prediction.
 %
-%   [pL_corr, pR_corr, info] = apply_mlp_correction(Cz, T7, T8, pL_geo, pR_geo, mlp_path)
+%   [pL_corr, pR_corr, info] = APPLY_MLP_CORRECTION(Cz, T7, T8, pL_geo, pR_geo, mlp_path)
 %
-%   Loads a small 1-hidden-layer MLP from `mlp_path` (a .mat file produced by
-%   c_Train_LEMON_MLP.py) and returns:
-%     pL_corr = pL_geo + dL      (corrected left HTJ, metres)
-%     pR_corr = pR_geo + dR      (corrected right HTJ, metres)
-%     info    = struct('dL', dL, 'dR', dR, 'magnitude_mm', ...)
+%   Loads a small 1-hidden-layer MLP from MLP_PATH (a .mat file produced
+%   by c_Train_LEMON_MLP.py / per-cohort training analog) and returns:
+%       pL_corr = pL_geo + dL    (corrected left  HTJ, metres)
+%       pR_corr = pR_geo + dR    (corrected right HTJ, metres)
+%       info    = struct('dL', dL, 'dR', dR, 'magnitude_mm', ...)
 %
-%   Inputs are all 1x3 row vectors in RAS metres.
+%   Architecture: 15-input -> 64 ReLU -> 6-output (1,414 parameters).
+%   Inputs are all 1x3 row vectors in RAS metres. Weights file is cached
+%   between calls to avoid repeated disk IO. Inference is pure matrix
+%   multiplication (no Statistics & ML Toolbox dependency).
 %
-%   Weights file is cached between calls to avoid repeated disk IO.
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Tier 1.5 residual-correction MLP (MATLAB)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     persistent CACHE
     if isempty(CACHE) || ~isfield(CACHE, 'path') || ~strcmp(CACHE.path, mlp_path)

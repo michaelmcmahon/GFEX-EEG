@@ -1,17 +1,31 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
-% verify_geodesic_tuner.m
-% Simple verification of the FNO Tuner using a subset of HAD subjects.
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Tuner verification script (MATLAB)
+% ------------------------------------------------------------------------------
+%   verify_geodesic_tuner.m
+%   Simple verification of the FNO Tuner using a subset of HAD subjects.
+%   Smoke-checks that the tuner converges to within expected residual
+%   bounds on a known training pool.
+%
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
 root_dir = 'C:\MoBI_Research';
 addpath(fullfile(root_dir, 'GFEX-EEG', 'matlab'));

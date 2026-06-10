@@ -1,27 +1,55 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# *******************************************************************************/
+"""GFEX-EEG: ICBM152 template positions for standard 10-20 electrodes (Python)
 
-"""ICBM152 template positions for standard 10-20 electrodes.
+All positions are mesh-derived from ``ICBM152_scalp.mat`` via 10-20
+geodesic arc proportions (Jasper 1958 / Chatrian 1985). Used as the
+template anchor set for the 3-point Procrustes alignment inside the
+geodesic engine, and as the shipped golden-value reference for the
+``reproduce_results/quickstart`` scripts.
 
-All positions are mesh-derived from ICBM152_scalp.mat via 10-20 geodesic
-arc proportions (Jasper 1958 / Chatrian 1985). Computation script:
-    Fiducial_Extrapolation_Exp/Scripts/c_Compute_Template_Anchors.m
-Derivation log:
-    Fiducial_Extrapolation_Exp/Results/c_Compute_Template_Anchors_20260419.log
-
-Method: Nz/Iz located geometrically (anterior/posterior scalp-base on the
-X=0 midline at ear-level Z). Sagittal arc Nz->Cz->Iz traced via Dijkstra on
+Method
+------
+Nz/Iz located geometrically (anterior/posterior scalp-base on the X=0
+midline at ear-level Z). Sagittal arc Nz->Cz->Iz traced via Dijkstra on
 scalp-mesh edges. Midline anchors placed at canonical 10-20 proportions
 (Fpz=10%, Fz=30%, Pz=70%, Oz=90%). Lateral anchors placed along Fpz->T7
 and Fpz->T8 oblique arcs at 50% (F7/F8) and 75% (FT7/FT8).
 
 Cz, T7, T8 retain the originally shipped engine reference positions.
+
+Provenance
+----------
+Computation script: ``Fiducial_Extrapolation_Exp/Scripts/c_Compute_Template_Anchors.m``
+Derivation log:     ``Fiducial_Extrapolation_Exp/Results/c_Compute_Template_Anchors_20260419.log``
+
+Citation
+--------
+If you use this code in research, please cite both the software archive
+and the accompanying manuscript:
+
+    [Software]
+    McMahon, M., Schukat, M., & Barrett, E. (2026).
+    GFEX-EEG Toolbox [Software].
+    Zenodo. https://doi.org/10.5281/zenodo.20580899
+
+    [Paper]
+    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+    GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free
+    EEG source imaging.
+
+See also CITATION.cff in the repository root (machine-readable).
+Current version: see ``geodesic_rescue_py.__version__`` (single source
+of truth in ``__init__.py``).
+
+Repository
+----------
+https://github.com/michaelmcmahon/GFEX-EEG
+
+License
+-------
+MIT — see LICENSE in the repository root.
 """
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 import numpy as np
 

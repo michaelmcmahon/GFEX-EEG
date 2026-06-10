@@ -1,14 +1,56 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# * DOI: [If available]
-# * Date: 2026
-# *
-# * [License Text or link to License file]
-# *******************************************************************************/
+"""GFEX-EEG: Far/Near metaheuristic hyperparameter tuner (Python)
+
+Re-tunes the geodesic descent ratio (rho) and non-linear scaling exponent
+(beta) for non-standard EEG hardware classes. Two-phase optimization:
+
+    Far : global search via differential_evolution over
+          rho in [0.001, 0.1], beta in [0.5, 2.5]
+    Near: local refinement via Nelder-Mead simplex with TolX ~1e-4
+
+Loss is the radial-telescope metric (V37.0) which decouples direction
+from magnitude and is robust to outliers in the held-out pool.
+
+Usage
+-----
+    from geodesic_rescue_py import GeodesicTuner
+    tuner = GeodesicTuner(training_data=[...])
+    rho_opt, beta_opt = tuner.tune()
+
+Notes
+-----
+Bit-identical loss-function output with the MATLAB tuner
+(geodesic_fno_tuner.m).
+
+Citation
+--------
+If you use this code in research, please cite both the software archive
+and the accompanying manuscript:
+
+    [Software]
+    McMahon, M., Schukat, M., & Barrett, E. (2026).
+    GFEX-EEG Toolbox [Software].
+    Zenodo. https://doi.org/10.5281/zenodo.20580899
+
+    [Paper]
+    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+    GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free
+    EEG source imaging.
+
+See also CITATION.cff in the repository root (machine-readable).
+Current version: see ``geodesic_rescue_py.__version__`` (single source
+of truth in ``__init__.py``).
+
+Repository
+----------
+https://github.com/michaelmcmahon/GFEX-EEG
+Issues: https://github.com/michaelmcmahon/GFEX-EEG/issues
+
+License
+-------
+MIT — see LICENSE in the repository root.
+"""
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 import numpy as np
 from scipy.optimize import minimize, differential_evolution

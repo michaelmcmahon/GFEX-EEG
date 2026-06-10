@@ -1,21 +1,53 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.1.0-dev
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# *******************************************************************************/
+"""GFEX-EEG: Tier 1.5 residual-correction MLP (Python)
 
-"""Residual-learning MLP correction on top of the geodesic prediction.
+Residual-learning MLP correction on top of the geodesic prediction.
+Single-hidden-layer network (15-input -> 64 ReLU -> 6-output, 1,414
+parameters) trained against per-subject MRI-tagged HTJ ground truth.
 
-The MLP is a small 1-hidden-layer network (15-input -> 64 ReLU -> 6-output)
-trained on LEMON residuals. Inputs: (Cz, T7, T8, pL_geo, pR_geo) in RAS
-metres. Outputs: (dL, dR) correction vectors (metres). Final prediction:
-    pL_corrected = pL_geo + dL
-    pR_corrected = pR_geo + dR
+Architecture
+------------
+    Inputs : (Cz, T7, T8, pL_geo, pR_geo) in RAS metres
+    Outputs: (dL, dR) correction vectors in metres
+    Final  : pL_corrected = pL_geo + dL,  pR_corrected = pR_geo + dR
 
-Weights are cached per-path to avoid repeated disk IO.
+Inference is pure matrix multiplication — no ML-framework dependency at
+runtime (NumPy only). Weights are cached per-path to avoid repeated
+disk IO.
+
+Three production cohort presets ship: ``LEMON_Polhemus_Adult`` (Polhemus,
+4.76 mm held-out), ``WH_Neuromag70_Adult`` (Neuromag, 8.16 mm held-out),
+``CapTrak_Adult`` (BrainProducts CapTrak, 8.52 mm leave-one-out).
+
+Citation
+--------
+If you use this code in research, please cite both the software archive
+and the accompanying manuscript:
+
+    [Software]
+    McMahon, M., Schukat, M., & Barrett, E. (2026).
+    GFEX-EEG Toolbox [Software].
+    Zenodo. https://doi.org/10.5281/zenodo.20580899
+
+    [Paper]
+    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+    GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free
+    EEG source imaging.
+
+See also CITATION.cff in the repository root (machine-readable).
+Current version: see ``geodesic_rescue_py.__version__`` (single source
+of truth in ``__init__.py``).
+
+Repository
+----------
+https://github.com/michaelmcmahon/GFEX-EEG
+Issues: https://github.com/michaelmcmahon/GFEX-EEG/issues
+
+License
+-------
+MIT — see LICENSE in the repository root.
 """
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 import os
 import numpy as np

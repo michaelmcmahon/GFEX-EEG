@@ -1,7 +1,29 @@
-% =========================================================================
-% MASTER COHORT VALIDATION ENGINE (N=216) - RIGOROUS V12 (RADIAL TELESCOPE)
-% Objective: Quantify Global Accuracy using LEMON-Decade derived weights.
-% =========================================================================
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Master cohort validation scoreboard (V12, MATLAB)
+% ------------------------------------------------------------------------------
+%   MASTER COHORT VALIDATION ENGINE (N=216) - RIGOROUS V12 (RADIAL TELESCOPE)
+%   Objective: Quantify Global Accuracy using LEMON-Decade derived weights.
+%
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
 clc;
 addpath('C:\MoBI_Research\GFEX-EEG\matlab\core');

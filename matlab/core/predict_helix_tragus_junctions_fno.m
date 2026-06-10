@@ -1,20 +1,46 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
-% =========================================================================
-% GEODESIC EXTRAPOLATION ALGORITHM (V2.2 - PROJECTION PARADOX FIX)
-% Objective: Predict HTJ and return mesh indices for rigorous mapping.
-% =========================================================================
 function [LHJ_mni, RHJ_mni, iCz, iT7, iT8] = predict_helix_tragus_junctions_fno(Cz_t, T7_t, T8_t, mesh_path, rho, beta, D_L_sub, D_R_sub, D_standard)
+%PREDICT_HELIX_TRAGUS_JUNCTIONS_FNO  V2.2 geodesic walk on the ICBM152 scalp mesh.
+%
+%   [LHJ_mni, RHJ_mni, iCz, iT7, iT8] = PREDICT_HELIX_TRAGUS_JUNCTIONS_FNO( ...
+%       Cz_t, T7_t, T8_t, mesh_path, rho, beta, D_L_sub, D_R_sub, D_standard)
+%
+%   Performs the V2.2 ("projection paradox fix") two-arm geodesic descent
+%   from the Cz seed across the scalp mesh, returns the predicted left
+%   and right HTJ in template (MNI) space, along with the closest-vertex
+%   indices used for the Procrustes mapping back to subject space.
+%
+%   This file is LOCKED — do not modify without an explicit re-tune of
+%   the rho / beta parameters and full cross-platform parity re-test.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Geodesic walk (MATLAB, V2.2, LOCKED)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%     See also CITATION.cff in the repository root (machine-readable).
+%
+%   VERSION
+%     For the current package version, call gfex_version().
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+%     See LICENSE in the repository root.
+% ==============================================================================
 
     if nargin < 9, D_standard = 0.1388; end
     mesh = load(mesh_path);

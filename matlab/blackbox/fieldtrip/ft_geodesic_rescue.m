@@ -1,18 +1,46 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% * DOI: [If available]
-% * Date: 2026
-% *
-% * [License Text or link to License file]
-% *******************************************************************************/
-
 function [elec] = ft_geodesic_rescue(cfg, elec)
-% FT_GEODESIC_RESCUE (V21.8 - Invincible FieldTrip Wrapper)
-% Includes: Hyper-Scale Empirical Shield and RAS-to-ALS Axis Transposition.
+%FT_GEODESIC_RESCUE  FieldTrip wrapper for GFEX-EEG geodesic rescue.
+%
+%   elec = FT_GEODESIC_RESCUE(cfg, elec)
+%
+%   FieldTrip-flavoured wrapper around the GFEX-EEG core engine.
+%   Generates missing LHJ / RHJ fiducial coordinates on the input
+%   electrode definition `elec`, with Hyper-Scale Empirical Shield
+%   and automatic RAS-to-ALS axis transposition.
+%
+%   Configuration fields:
+%     cfg.cohort     - Cohort preset tag (see weight_zoo.json).
+%     cfg.rho        - Explicit override (highest precedence).
+%     cfg.beta       - Explicit override.
+%     cfg.D_standard - Explicit override.
+%
+%   Weight precedence: explicit cfg.rho/beta/D_standard > cfg.cohort
+%   preset > hard default (LEMON-tuned, 2026-04-19).
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — FieldTrip black-box wrapper (MATLAB, V21.8)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     if nargin < 2
         help ft_geodesic_rescue;

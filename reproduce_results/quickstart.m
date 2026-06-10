@@ -1,32 +1,56 @@
-% =============================================================================
-% GFEX-EEG quickstart (MATLAB)
-% =============================================================================
-% Sanity-check the toolbox end-to-end without downloading any external dataset.
+% ==============================================================================
+%   GFEX-EEG quickstart (MATLAB)
+% ------------------------------------------------------------------------------
+%   Sanity-check the toolbox end-to-end without downloading any external dataset.
 %
-% Uses the shipped template Cz/T7/T8 anchors (canonical RAS-metre positions on
-% the ICBM152 scalp manifold) as a synthetic subject input, then exercises:
+%   Uses the shipped template Cz/T7/T8 anchors (canonical RAS-metre positions on
+%   the ICBM152 scalp manifold) as a synthetic subject input, then exercises:
 %
-%   1. Pure geodesic prediction        (Tier 1)
-%   2. LEMON_Polhemus_Adult MLP        (Tier 1.5)
-%   3. WH_Neuromag70_Adult MLP         (Tier 1.5)
-%   4. CapTrak_Adult MLP               (Tier 1.5)
+%     1. Pure geodesic prediction        (Tier 1)
+%     2. LEMON_Polhemus_Adult MLP        (Tier 1.5)
+%     3. WH_Neuromag70_Adult MLP         (Tier 1.5)
+%     4. CapTrak_Adult MLP               (Tier 1.5)
 %
-% For each mode the predicted Helix-Tragus Junction coordinates are compared
-% against hardcoded golden values (machine-precision tolerance: 1e-5 m =
-% 0.01 mm). All four assertions should PASS on a clean install.
+%   For each mode the predicted Helix-Tragus Junction coordinates are compared
+%   against hardcoded golden values (machine-precision tolerance: 1e-5 m =
+%   0.01 mm). All four assertions should PASS on a clean install.
 %
-% This script demonstrates that the toolbox loads, runs, and produces
-% deterministic bit-identical output across runs. It does NOT reproduce the
-% per-cohort accuracy numbers (4.76 / 8.16 / 8.52 mm) reported in the paper:
-% those additionally require downloading the public LEMON / Wakeman-Henson /
-% ds004024 datasets per the manuscript's Data Availability statement.
+%   This script demonstrates that the toolbox loads, runs, and produces
+%   deterministic bit-identical output across runs. It does NOT reproduce the
+%   per-cohort accuracy numbers (4.76 / 8.16 / 8.52 mm) reported in the paper:
+%   those additionally require downloading the public LEMON / Wakeman-Henson /
+%   ds004024 datasets per the manuscript's Data Availability statement.
 %
-% Usage (from MATLAB, with the toolbox on the path):
-%   >> cd <toolbox-root>/reproduce_results
-%   >> quickstart
+%   Usage (from MATLAB, with the toolbox on the path):
+%     >> cd <toolbox-root>/reproduce_results
+%     >> quickstart
 %
-% Expected runtime: < 1 second.
-% =============================================================================
+%   Expected runtime: < 1 second.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — Quickstart demo (MATLAB)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%   Issues     : https://github.com/michaelmcmahon/GFEX-EEG/issues
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
 % Add toolbox core to MATLAB path
 this_dir = fileparts(mfilename('fullpath'));

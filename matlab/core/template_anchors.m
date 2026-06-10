@@ -1,17 +1,8 @@
-% /*******************************************************************************
-% * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-% * Version: 1.0.0
-% * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-% * License:  MIT License
-% * Authors: Michael McMahon / University of Galway
-% *******************************************************************************/
-
 function T = template_anchors(label)
-% TEMPLATE_ANCHORS  ICBM152 template positions for standard 10-20 electrodes.
+%TEMPLATE_ANCHORS  ICBM152 template positions for standard 10-20 electrodes.
 %
-% Usage:
-%   T = template_anchors('Fpz')  % 1x3 coordinate in metres (RAS)
-%   labels = template_anchors()  % cell array of supported labels
+%   T = template_anchors('Fpz')   % 1x3 coordinate in metres (RAS)
+%   labels = template_anchors()   % cell array of supported labels
 %
 % All positions are mesh-derived from ICBM152_scalp.mat via 10-20 geodesic
 % arc proportions (Jasper 1958 / Chatrian 1985). Computation script:
@@ -26,6 +17,30 @@ function T = template_anchors(label)
 % and Fpz->T8 oblique arcs at 50% (F7/F8) and 75% (FT7/FT8).
 %
 % Cz, T7, T8 retain the originally shipped engine reference positions.
+%
+% ==============================================================================
+%   GFEX-EEG TOOLBOX — ICBM152 10-20 template anchors (MATLAB)
+% ------------------------------------------------------------------------------
+%   Authors:
+%     Michael McMahon  (ORCID: 0000-0002-5266-3194)
+%     Michael Schukat  (ORCID: 0000-0002-6908-6100)
+%     Enda Barrett     (ORCID: 0000-0002-9876-8717)
+%     University of Galway, Galway, Ireland
+%
+%   Repository : https://github.com/michaelmcmahon/GFEX-EEG
+%
+%   CITATION (please cite both)
+%     [Software] McMahon, M., Schukat, M., & Barrett, E. (2026).
+%                GFEX-EEG Toolbox [Software].
+%                Zenodo. https://doi.org/10.5281/zenodo.20580899
+%     [Paper]    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+%                GFEX-EEG: Geodesic recovery of anatomical fiducials for
+%                MRI-free EEG source imaging.
+%
+%   LICENSE
+%     SPDX-License-Identifier: MIT
+%     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
+% ==============================================================================
 
     persistent ANCHORS
     if isempty(ANCHORS)

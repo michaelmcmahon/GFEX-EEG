@@ -1,14 +1,52 @@
-# /*******************************************************************************
-# * GFEX-EEG - Geodesic fiducial extrapolation for MRI-free EEG source imaging
-# * Version: 1.0.0
-# * Repository: https://github.com/michaelmcmahon/GFEX-EEG
-# * License:  MIT License
-# * Authors: Michael McMahon / University of Galway
-# * DOI: [If available]
-# * Date: 2026
-# *
-# * [License Text or link to License file]
-# *******************************************************************************/
+"""GFEX-EEG: Core extrapolation engine (Python)
+
+Deterministic geodesic walk on the ICBM152 scalp manifold. Predicts the
+Helix-Tragus Junction (LHJ, RHJ) from three reliable scalp electrode
+positions (Cz, T7, T8) using a 3-point Procrustes alignment onto the
+template followed by single-source Dijkstra shortest paths and tangent
+continuation beyond the path terminus.
+
+Production weights (LEMON-tuned 2026-04-19): rho=0.248383, beta=0.235926,
+D_standard=0.1388 m. Bit-identical parity with the MATLAB implementation
+(verified at machine precision: 28 of 28 cross-platform tests at
+0.0000 mm wrapper-parity).
+
+Usage
+-----
+    from geodesic_rescue_py import GeodesicRescue
+    rescuer = GeodesicRescue(cohort='LEMON_Polhemus_Adult')
+    pL, pR = rescuer.rescue(Cz, T7, T8)
+
+Citation
+--------
+If you use this code in research, please cite both the software archive
+and the accompanying manuscript:
+
+    [Software]
+    McMahon, M., Schukat, M., & Barrett, E. (2026).
+    GFEX-EEG Toolbox [Software].
+    Zenodo. https://doi.org/10.5281/zenodo.20580899
+
+    [Paper]
+    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+    GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free
+    EEG source imaging.
+
+See also CITATION.cff in the repository root (machine-readable).
+Current version: see ``geodesic_rescue_py.__version__`` (single source
+of truth in ``__init__.py``).
+
+Repository
+----------
+https://github.com/michaelmcmahon/GFEX-EEG
+Issues: https://github.com/michaelmcmahon/GFEX-EEG/issues
+
+License
+-------
+MIT — see LICENSE in the repository root.
+"""
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 import numpy as np
 import scipy.io

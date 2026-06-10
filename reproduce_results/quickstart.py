@@ -1,6 +1,5 @@
-"""
-GFEX-EEG quickstart (Python)
-============================
+"""GFEX-EEG quickstart (Python)
+
 Sanity-check the toolbox end-to-end without downloading any external dataset.
 
 Uses the shipped template Cz/T7/T8 anchors (canonical RAS-metre positions on
@@ -21,12 +20,41 @@ per-cohort accuracy numbers (4.76 / 8.16 / 8.52 mm) reported in the paper:
 those additionally require downloading the public LEMON / Wakeman-Henson /
 ds004024 datasets per the manuscript's Data Availability statement.
 
-Usage:
+Usage
+-----
     cd <toolbox-root>/reproduce_results
     python quickstart.py
 
 Expected runtime: <1 second.
+
+Citation
+--------
+If you use this code in research, please cite both the software archive
+and the accompanying manuscript:
+
+    [Software]
+    McMahon, M., Schukat, M., & Barrett, E. (2026).
+    GFEX-EEG Toolbox [Software].
+    Zenodo. https://doi.org/10.5281/zenodo.20580899
+
+    [Paper]
+    McMahon, M., Schukat, M., & Barrett, E. (Submitted).
+    GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free
+    EEG source imaging.
+
+See also CITATION.cff in the repository root (machine-readable).
+
+Repository
+----------
+https://github.com/michaelmcmahon/GFEX-EEG
+Issues: https://github.com/michaelmcmahon/GFEX-EEG/issues
+
+License
+-------
+MIT — see LICENSE in the repository root.
 """
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 import json
 from pathlib import Path
