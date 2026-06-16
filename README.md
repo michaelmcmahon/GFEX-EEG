@@ -44,16 +44,16 @@ GFEX-EEG/
 └── README.md
 ```
 
-## Forensic Data Warning: The "Brainstorm Z=0 Flatline" and "Raw Voxel Trap"
+## Forensic Data Warning: The "Z=0 Coordinate Flatline" and "Raw Voxel Trap"
 When extracting ground truth from legacy neuroinformatics pipelines, **always ensure your data hasn't been structurally flattened or grid-locked.** 
 
-During our analysis of the LEMON dataset, we proved that standard Brainstorm BIDS exports mathematically coerce the 3D Polhemus coordinates to the `Z=0` plane, effectively **erasing the subject's physiological head tilt**. Furthermore, default Brainstorm MRI coordinates are frequently stored as **unscaled, un-tilted Voxel Indices**. 
+During our analysis of the LEMON dataset, we found that certain coordinate-system export conventions mathematically coerce the 3D Polhemus coordinates onto the `Z=0` plane, effectively **erasing the subject's physiological head tilt**. Default MRI coordinates are also frequently stored as **unscaled, un-tilted Voxel Indices**. 
 
 **The Fix:** Always extract True World Space coordinates (`cs_convert` to 'world' in Brainstorm) to restore the subject's physiological tilt and 1.0mm scaling before running any FNO Tuner derivations. Failure to do so will result in an Orthogonal Parity Collision.
 
 ## Tier 1: "Black-Box" Wrappers (For Standard Adult Cohorts)
 
-For 95% of use cases, researchers can rely on the LEMON-tuned weights (`rho = 0.248383`, `beta = 0.235926`, tuned against manually-annotated HTJ ground truth on N=10 LEMON subjects, held-out mean error 16.82 mm on N=10 independent subjects). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize BIDS double-scaling traps and execute **RAS-to-ALS** axis transposition.
+For 95% of use cases, researchers can rely on the LEMON-tuned weights (`rho = 0.248383`, `beta = 0.235926`, tuned against manually-annotated HTJ ground truth on N=10 LEMON subjects, held-out mean error 16.82 mm on N=10 independent subjects). The wrappers automatically apply the **Hyper-Scale Catch** to neutralize coordinate-system double-scaling traps and execute **RAS-to-ALS** axis transposition.
 
 For non-standard hardware (EGI, dense pediatric caps, custom Polhemus protocols) researchers are advised to retune via the FNO metaheuristic on a small cohort-specific training set — see Tier 2 below. Contributed cohort-specific weights can be consumed via the **cohort-preset** mechanism (see next section).
 
@@ -96,7 +96,7 @@ Held-out HTJ error against per-subject manually-tagged MRI ground truth, across 
 | Cohort | Hardware | N held-out | Tier 1 (pure geodesic) | Tier 1.5 (+ MLP) | Improvement |
 |---|---|---|---|---|---|
 | LEMON (`ds000221`) | Polhemus | 10 | 16.82 mm (SD 4.03) | **4.76 mm** (SD 2.06) | 71.7% |
-| Wakeman-Henson (`ds000117`/`ds002718`) | Neuromag 70-ch | 5 | 19.54 mm (SD 4.70) | **8.16 mm** (SD 1.55) | 58.2% |
+| Wakeman-Henson (`ds000117`/`ds002718`) | Neuromag 70-ch | 5 | 21.60 mm (SD 6.44) | **8.16 mm** (SD 1.55) | 62.2% |
 | Shirley Ryan AbilityLab (`ds004024`) | BrainProducts CapTrak | 13 (LOO-CV) | 18.36 mm (SD 6.31) | **8.52 mm** (SD 5.71) | 53.6% |
 
 The LEMON 4.76 mm Tier 1.5 result is statistically indistinguishable from a measured ~5 mm inter-modality annotation floor (Polhemus stylus vs MRI tagging) across both LEMON and Wakeman-Henson cohorts, indicating that further algorithmic refinement on this manifold is precluded by human annotation noise rather than by method limitation. The Tier 1.5 result also survives a 4-test data-leak diligence battery (subject separation; label-shuffle permutation test with 3× degradation on scrambled labels; alternative-holdout rotation at 5.29 ± 0.62 mm across 5 random 10-subject splits; FNO-seen vs unseen within training at 0.15 mm gap). Full report: `Fiducial_Extrapolation_Exp/Results/c_MLP_Diligence_20260420.json`.
