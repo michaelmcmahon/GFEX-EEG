@@ -4,7 +4,7 @@ Retrieves cohort-specific FNO weight presets from ``weight_zoo.json``.
 Each preset pins the geometric hyperparameters (rho, beta, D_standard)
 and the path to the cohort-specific Tier 1.5 MLP weights file.
 
-Three production presets ship in V1.1.5: ``LEMON_Polhemus_Adult``,
+Three production presets ship with the toolbox: ``LEMON_Polhemus_Adult``,
 ``WH_Neuromag70_Adult``, ``CapTrak_Adult``. The ``default`` and ``lemon``
 aliases map to ``LEMON_Polhemus_Adult``.
 

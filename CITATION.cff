@@ -25,9 +25,9 @@ authors:
     given-names: Enda
     orcid: "https://orcid.org/0000-0002-9876-8717"
     affiliation: "University of Galway, Ireland"
-version: "1.1.5"
-date-released: "2026-06-07"
-doi: "10.5281/zenodo.20580899"
+version: "1.1.6"
+date-released: "2026-06-24"
+doi: "10.5281/zenodo.20580898"
 license: MIT
 repository-code: "https://github.com/michaelmcmahon/GFEX-EEG"
 url: "https://github.com/michaelmcmahon/GFEX-EEG"
@@ -52,7 +52,7 @@ preferred-citation:
     - family-names: Barrett
       given-names: Enda
       orcid: "https://orcid.org/0000-0002-9876-8717"
-  version: "1.1.5"
+  version: "1.1.6"
   year: 2026
-  doi: "10.5281/zenodo.20580899"
-  url: "https://doi.org/10.5281/zenodo.20580899"
+  doi: "10.5281/zenodo.20580898"
+  url: "https://doi.org/10.5281/zenodo.20580898"

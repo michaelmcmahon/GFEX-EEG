@@ -34,5 +34,5 @@ function v = gfex_version()
 %     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 %     See LICENSE in the repository root.
 % ==============================================================================
-    v = '1.1.5';
+    v = '1.1.6';
 end

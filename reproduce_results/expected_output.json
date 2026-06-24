@@ -1,6 +1,6 @@
 {
   "$schema_version": "1.0",
-  "description": "Golden output values for quickstart.py / quickstart.m. Captured 2026-05-31 from toolbox release v1.1.4 (commit pending). Inputs are the canonical template Cz/T7/T8 anchors shipped in matlab/core/template_anchors.m and python/geodesic_rescue_py/template_anchors.py.",
+  "description": "Golden output values for quickstart.py / quickstart.m. Captured 2026-05-31; values are deterministic and remain current through toolbox release v1.1.6. Inputs are the canonical template Cz/T7/T8 anchors shipped in matlab/core/template_anchors.m and python/geodesic_rescue_py/template_anchors.py.",
   "input_anchors_m": {
     "Cz": [0.011240, 0.025921, 0.141134],
     "T7": [-0.089174, -0.001327, -0.006348],

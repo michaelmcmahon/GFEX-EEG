@@ -10,11 +10,15 @@ License: MIT — see LICENSE in the repository root.
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
+import os
 from setuptools import setup, find_packages
+
+_here = os.path.dirname(os.path.abspath(__file__))
+_readme = os.path.join(_here, os.pardir, "README.md")
 
 setup(
     name="geodesic-rescue-py",
-    version="1.1.5",
+    version="1.1.6",
     packages=find_packages(),
     install_requires=[
         "numpy",
@@ -29,7 +33,7 @@ setup(
         ],
     },
     description="Python implementation of the Geodesic Rescue Toolbox for EEG fiducial extrapolation.",
-    long_description=open("README.md").read() if os.path.exists("README.md") else "",
+    long_description=open(_readme, encoding="utf-8").read() if os.path.exists(_readme) else "",
     long_description_content_type="text/markdown",
     python_requires=">=3.7",
 )

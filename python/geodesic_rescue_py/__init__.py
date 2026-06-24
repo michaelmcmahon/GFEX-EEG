@@ -53,11 +53,11 @@ MIT — see LICENSE in the repository root.
 # SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 
 # --- Package metadata (single source of truth for the Python side) ------------
-__version__ = "1.1.5"
+__version__ = "1.1.6"
 __author__ = "Michael McMahon, Michael Schukat, Enda Barrett"
 __license__ = "MIT"
-__citation_doi__ = "10.5281/zenodo.20580899"
-__citation_url__ = "https://doi.org/10.5281/zenodo.20580899"
+__citation_doi__ = "10.5281/zenodo.20580898"
+__citation_url__ = "https://doi.org/10.5281/zenodo.20580898"
 
 # --- Public API re-exports ---------------------------------------------------
 from .core import GeodesicRescue

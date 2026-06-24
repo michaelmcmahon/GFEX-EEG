@@ -1,13 +1,13 @@
-# GFEX-EEG Toolbox (V1.1.5)
+# GFEX-EEG Toolbox (V1.1.6)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20580899.svg)](https://doi.org/10.5281/zenodo.20580899)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20580898.svg)](https://doi.org/10.5281/zenodo.20580898)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **A Hardware-Agnostic Spatial Extrapolation Engine for EEG Fiducials**
 
 GFEX-EEG solves the "MRI-Free, Fiducial-Free" paradox for high-density EEG systems (like EGI and CapTrak) and recovers floating origins from legacy datasets (like Wakeman-Henson). It uses a Far & Near Optimization (FNO) Metaheuristic paired with a Procrustes-Dijkstra Manifold Engine to extrapolate **Helix-Tragus Junction (HTJ)** coordinates — a geometrically unambiguous anatomical landmark — using only the positions of the Cz, T7, and T8 electrodes. For downstream compatibility, predicted HTJ coordinates are written into the standard `LPA`/`RPA` slots of MNE-Python Raw / EEGLAB / FieldTrip / Brainstorm data structures; existing source-imaging pipelines consume them as anatomical fiducials without modification.
 
-**V1.1.5 adds the MIT LICENSE file** at the repo root and the CITATION.cff metadata needed for the Zenodo deposit and GitHub's "Cite this repository" button. **V1.1.4 added a reviewer-friendly end-to-end sanity check** at [`reproduce_results/`](./reproduce_results) — `quickstart.py` and `quickstart.m` exercise all four production prediction modes (pure geodesic + three cohort MLPs) using shipped template anchors and golden-value assertions; no external dataset download required, runs in under a second. **V1.1.3 fixed the CapTrak_Adult MLP packaging and weights format** so all three production cohort MLPs (`LEMON_Polhemus_Adult` 4.76 mm, `WH_Neuromag70_Adult` 8.16 mm, `CapTrak_Adult` 8.52 mm held-out) are runnable through both the MATLAB and Python inference paths. **V1.1.0 introduced the optional Tier 1.5 residual-correction MLP**; opt in via the `mlp_correction=true` kwarg. The default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
+**V1.1.6 refines the README wording and fixes a `setup.py` packaging bug** so `pip install .` succeeds from a clean clone. **V1.1.5 adds the MIT LICENSE file** at the repo root and the CITATION.cff metadata needed for the Zenodo deposit and GitHub's "Cite this repository" button. **V1.1.4 added a reviewer-friendly end-to-end sanity check** at [`reproduce_results/`](./reproduce_results) — `quickstart.py` and `quickstart.m` exercise all four production prediction modes (pure geodesic + three cohort MLPs) using shipped template anchors and golden-value assertions; no external dataset download required, runs in under a second. **V1.1.3 fixed the CapTrak_Adult MLP packaging and weights format** so all three production cohort MLPs (`LEMON_Polhemus_Adult` 4.76 mm, `WH_Neuromag70_Adult` 8.16 mm, `CapTrak_Adult` 8.52 mm held-out) are runnable through both the MATLAB and Python inference paths. **V1.1.0 introduced the optional Tier 1.5 residual-correction MLP**; opt in via the `mlp_correction=true` kwarg. The default pure-geodesic path is preserved bit-identically and remains tagged at `v1.0.0-pure-geodesic` for reproducibility of pre-V1.1 results. See the Tier 1.5 section below.
 
 ## Quickstart
 
@@ -180,7 +180,7 @@ results = tuner.tune()
 
 If you use this software, please cite both the toolbox (via the Zenodo DOI) and the accompanying manuscript when it is published. The CITATION.cff file at the repository root provides ready-to-export APA / BibTeX / EndNote formats via GitHub's "Cite this repository" button.
 
-**Toolbox archive:** [10.5281/zenodo.20580899](https://doi.org/10.5281/zenodo.20580899) (v1.1.5, released 2026-06-07)
+**Toolbox archive:** [10.5281/zenodo.20580898](https://doi.org/10.5281/zenodo.20580898) (concept DOI — always resolves to the latest version; current release v1.1.6, 2026-06-24)
 
 **Manuscript:** McMahon, M., Schukat, M., & Barrett, E. "GFEX-EEG: Geodesic recovery of anatomical fiducials for MRI-free EEG source imaging." (Submitted for publication.)
 
@@ -189,5 +189,5 @@ If you use this software, please cite both the toolbox (via the Zenodo DOI) and 
 **Authors:** Michael McMahon, Michael Schukat, Enda Barrett — University of Galway  
 **Repository:** [https://github.com/michaelmcmahon/GFEX-EEG](https://github.com/michaelmcmahon/GFEX-EEG)  
 **License:** MIT License  
-**Released:** 2026-06-07 (v1.1.5)
+**Released:** 2026-06-24 (v1.1.6)
 
