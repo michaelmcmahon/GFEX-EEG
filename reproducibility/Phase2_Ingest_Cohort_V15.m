@@ -31,7 +31,7 @@ function Phase2_Ingest_Cohort_V15(cohort_id)
 %     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 % ==============================================================================
 
-    root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
+    root_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment';
     data_dir = fullfile(root_dir, 'Data_Clean', cohort_id);
     proc_dir = fullfile(root_dir, 'Data_Processed', cohort_id);
     bst_dir  = fullfile('C:\MoBI_Research\brainstorm_db', cohort_id, 'anat');

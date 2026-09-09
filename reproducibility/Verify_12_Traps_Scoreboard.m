@@ -30,7 +30,7 @@ function Verify_12_Traps_Scoreboard()
 %     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 % ==============================================================================
 
-    root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
+    root_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment';
     raw_dir  = fullfile(root_dir, 'Data_Clean');
     proc_dir = fullfile(root_dir, 'Data_Processed'); 
     

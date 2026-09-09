@@ -29,7 +29,7 @@ function calculate_error()
 %     SPDX-License-Identifier: MIT
 %     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 % ==============================================================================
-    root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
+    root_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment';
     res_dir  = fullfile(root_dir, 'Results');
     
     load(fullfile(res_dir, 'Algorithm_Predictions.mat'), 'Algorithm_Predictions');

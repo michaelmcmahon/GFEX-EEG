@@ -31,7 +31,7 @@ function PhaseV_Step5_Final_Global_Validation_V21_Rescue()
 %     SPDX-FileCopyrightText: 2026 Michael McMahon, University of Galway
 % ==============================================================================
 
-    root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
+    root_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment';
     scripts_dir = fileparts(mfilename('fullpath'));
     addpath(scripts_dir);
     addpath(fullfile(scripts_dir, '..', 'matlab', 'core'));

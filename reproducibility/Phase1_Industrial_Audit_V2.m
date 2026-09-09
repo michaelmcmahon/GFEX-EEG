@@ -34,7 +34,7 @@ function Phase1_Industrial_Audit_V2()
     addpath('C:\MoBI_Research\brainstorm3');
     if ~brainstorm('status'), brainstorm nogui; end
     
-    root_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp';
+    root_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment';
     raw_dir  = fullfile(root_dir, 'Data_Clean');
     bst_db   = 'C:\MoBI_Research\brainstorm_db';
     

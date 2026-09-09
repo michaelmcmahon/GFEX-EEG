@@ -26,8 +26,8 @@
 % ==============================================================================
 
 clc;
-addpath('C:\MoBI_Research\GFEX-EEG\matlab\core');
-addpath('C:\MoBI_Research\GFEX-EEG\reproducibility');
+addpath('C:\MoBI_Research\GFEX-EEG_Project\toolbox\matlab\core');
+addpath('C:\MoBI_Research\GFEX-EEG_Project\toolbox\reproducibility');
 addpath('C:\MoBI_Research\brainstorm3');
 addpath(genpath('C:\MoBI_Research\brainstorm3\toolbox'));
 mesh_path = fullfile(fileparts(mfilename('fullpath')), '..', 'data', 'ICBM152_scalp.mat');
@@ -37,8 +37,8 @@ rho_final = 0.248383;
 beta_final = 0.235926;
 D_standard = 0.1388;
 
-base_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp\Data_Clean';
-raw_lemon_dir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp\Data_Raw\ds000221_LEMON';
+base_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment\Data_Clean';
+raw_lemon_dir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment\Data_Raw\ds000221_LEMON';
 
 % Target Cohorts
 cohorts = {'ds000221_LEMON', 'ds004718', 'ds005795', 'ds005811-ds005810', 'ds006525', 'ds007216', 'ds007353'};

@@ -2,11 +2,11 @@
 % Validates the new V23.0 GFEX-EEG core with native Parity swapping.
 
 clc;
-addpath('C:\MoBI_Research\GFEX-EEG\matlab\core');
+addpath('C:\MoBI_Research\GFEX-EEG_Project\toolbox\matlab\core');
 addpath(genpath('C:\MoBI_Research\brainstorm3\toolbox'));
 
 % Target LEMON Sub-010060 (Flattened ALS space)
-rawDir = 'C:\MoBI_Research\Fiducial_Extrapolation_Exp\Data_Raw\ds000221_LEMON';
+rawDir = 'C:\MoBI_Research\GFEX-EEG_Project\experiment\Data_Raw\ds000221_LEMON';
 sub_id = 'sub-010060';
 matPath = fullfile(rawDir, sub_id, 'eeg', [sub_id '_localizer.mat']);
 loc = load(matPath);
